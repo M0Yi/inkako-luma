@@ -1,0 +1,21 @@
+services:
+  inkako_service:
+    image: ${DOCKER_IMAGE_NAME}
+    ports:
+      - target: 9501
+        published: 7501
+    networks:
+      - my_network
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure  # 仅在容器以非零退出码退出时重启
+        delay: 10s
+        max_attempts: 5
+      update_config:
+        parallelism: 2
+        delay: 5s
+        order: start-first
+networks:
+  my_network:
+    external: true

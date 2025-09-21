@@ -56,7 +56,7 @@ fi
 
 # 获取当前时间
 current_time=$(date +%Y%m%d%H%M%S)
-docker_image_name=inkako-api-"$1":"$current_time"
+docker_image_name=inkako-luma-"$1":"$current_time"
 export DOCKER_IMAGE_NAME="$docker_image_name"
 # 构建 Docker 镜像，传入 APP_ENV 参数，并使用当前时间作为标签
 docker build --build-arg APP_ENV="$1" -t "$docker_image_name" .
