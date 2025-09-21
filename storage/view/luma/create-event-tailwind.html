@@ -1,0 +1,474 @@
+{% extends "layout/page.html" %}
+
+{% block content %}
+<!-- Create Event Form Section -->
+<section class="section bg-gray-50">
+    <div class="container-custom">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    创建新活动
+                </h1>
+                <p class="text-xl text-gray-600">
+                    几分钟内创建专业的活动页面
+                </p>
+            </div>
+
+            <!-- Form Card -->
+            <div class="card-glass p-8 md:p-12">
+                <form class="space-y-8" id="create-event-form">
+                    <!-- Basic Information -->
+                    <div class="space-y-6">
+                        <h2 class="text-2xl font-semibold text-gray-900 border-b border-gray-200 pb-3">
+                            基本信息
+                        </h2>
+
+                        <!-- Event Title -->
+                        <div>
+                            <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+                                活动标题 <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="title"
+                                name="title"
+                                class="form-input focus-ring"
+                                placeholder="输入活动标题"
+                                required
+                            >
+                        </div>
+
+                        <!-- Event Description -->
+                        <div>
+                            <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                                活动描述 <span class="text-red-500">*</span>
+                            </label>
+                            <textarea
+                                id="description"
+                                name="description"
+                                rows="4"
+                                class="form-textarea focus-ring"
+                                placeholder="详细描述你的活动..."
+                                required
+                            ></textarea>
+                        </div>
+
+                        <!-- Event Category -->
+                        <div>
+                            <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
+                                活动类别 <span class="text-red-500">*</span>
+                            </label>
+                            <select id="category" name="category" class="form-select focus-ring" required>
+                                <option value="">选择活动类别</option>
+                                <option value="tech">科技</option>
+                                <option value="business">商业</option>
+                                <option value="art">艺术</option>
+                                <option value="sports">体育</option>
+                                <option value="education">教育</option>
+                                <option value="lifestyle">生活</option>
+                                <option value="outdoor">户外</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+
+                        <!-- Event Type -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-3">
+                                活动类型 <span class="text-red-500">*</span>
+                            </label>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <label class="relative">
+                                    <input type="radio" name="type" value="offline" class="sr-only peer" required>
+                                    <div class="card-hover p-6 text-center cursor-pointer peer-checked:ring-2 peer-checked:ring-luma-500 peer-checked:border-luma-500">
+                                        <i class="fas fa-map-marker-alt text-3xl text-luma-500 mb-3"></i>
+                                        <h3 class="font-semibold text-gray-900">线下活动</h3>
+                                        <p class="text-sm text-gray-600 mt-1">面对面交流</p>
+                                    </div>
+                                </label>
+                                <label class="relative">
+                                    <input type="radio" name="type" value="online" class="sr-only peer" required>
+                                    <div class="card-hover p-6 text-center cursor-pointer peer-checked:ring-2 peer-checked:ring-luma-500 peer-checked:border-luma-500">
+                                        <i class="fas fa-video text-3xl text-luma-500 mb-3"></i>
+                                        <h3 class="font-semibold text-gray-900">线上活动</h3>
+                                        <p class="text-sm text-gray-600 mt-1">视频会议</p>
+                                    </div>
+                                </label>
+                                <label class="relative">
+                                    <input type="radio" name="type" value="hybrid" class="sr-only peer" required>
+                                    <div class="card-hover p-6 text-center cursor-pointer peer-checked:ring-2 peer-checked:ring-luma-500 peer-checked:border-luma-500">
+                                        <i class="fas fa-globe text-3xl text-luma-500 mb-3"></i>
+                                        <h3 class="font-semibold text-gray-900">混合活动</h3>
+                                        <p class="text-sm text-gray-600 mt-1">线上线下结合</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Date & Time -->
+                    <div class="space-y-6">
+                        <h2 class="text-2xl font-semibold text-gray-900 border-b border-gray-200 pb-3">
+                            时间安排
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">
+                                    开始日期 <span class="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="date"
+                                    id="start_date"
+                                    name="start_date"
+                                    class="form-input focus-ring"
+                                    required
+                                >
+                            </div>
+                            <div>
+                                <label for="start_time" class="block text-sm font-medium text-gray-700 mb-2">
+                                    开始时间 <span class="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="time"
+                                    id="start_time"
+                                    name="start_time"
+                                    class="form-input focus-ring"
+                                    required
+                                >
+                            </div>
+                            <div>
+                                <label for="end_date" class="block text-sm font-medium text-gray-700 mb-2">
+                                    结束日期
+                                </label>
+                                <input
+                                    type="date"
+                                    id="end_date"
+                                    name="end_date"
+                                    class="form-input focus-ring"
+                                >
+                            </div>
+                            <div>
+                                <label for="end_time" class="block text-sm font-medium text-gray-700 mb-2">
+                                    结束时间
+                                </label>
+                                <input
+                                    type="time"
+                                    id="end_time"
+                                    name="end_time"
+                                    class="form-input focus-ring"
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Timezone -->
+                        <div>
+                            <label for="timezone" class="block text-sm font-medium text-gray-700 mb-2">
+                                时区
+                            </label>
+                            <select id="timezone" name="timezone" class="form-select focus-ring">
+                                <option value="Asia/Shanghai">中国标准时间 (CST)</option>
+                                <option value="America/New_York">美国东部时间 (EST)</option>
+                                <option value="Europe/London">格林威治时间 (GMT)</option>
+                                <option value="Asia/Tokyo">日本标准时间 (JST)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="space-y-6">
+                        <h2 class="text-2xl font-semibold text-gray-900 border-b border-gray-200 pb-3">
+                            活动地点
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="venue_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                    场地名称
+                                </label>
+                                <input
+                                    type="text"
+                                    id="venue_name"
+                                    name="venue_name"
+                                    class="form-input focus-ring"
+                                    placeholder="例如：北京国际会议中心"
+                                >
+                            </div>
+                            <div>
+                                <label for="city" class="block text-sm font-medium text-gray-700 mb-2">
+                                    城市 <span class="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="city"
+                                    name="city"
+                                    class="form-input focus-ring"
+                                    placeholder="例如：北京"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="address" class="block text-sm font-medium text-gray-700 mb-2">
+                                详细地址
+                            </label>
+                            <input
+                                type="text"
+                                id="address"
+                                name="address"
+                                class="form-input focus-ring"
+                                placeholder="输入详细地址"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Registration Settings -->
+                    <div class="space-y-6">
+                        <h2 class="text-2xl font-semibold text-gray-900 border-b border-gray-200 pb-3">
+                            报名设置
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="max_attendees" class="block text-sm font-medium text-gray-700 mb-2">
+                                    最大参与人数
+                                </label>
+                                <input
+                                    type="number"
+                                    id="max_attendees"
+                                    name="max_attendees"
+                                    class="form-input focus-ring"
+                                    placeholder="0 表示无限制"
+                                    min="0"
+                                >
+                            </div>
+                            <div>
+                                <label for="registration_deadline" class="block text-sm font-medium text-gray-700 mb-2">
+                                    报名截止时间
+                                </label>
+                                <input
+                                    type="datetime-local"
+                                    id="registration_deadline"
+                                    name="registration_deadline"
+                                    class="form-input focus-ring"
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Registration Type -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-3">
+                                报名方式
+                            </label>
+                            <div class="space-y-3">
+                                <label class="flex items-center">
+                                    <input type="radio" name="registration_type" value="free" class="text-luma-500 focus:ring-luma-500" checked>
+                                    <span class="ml-3 text-gray-700">免费活动</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="registration_type" value="paid" class="text-luma-500 focus:ring-luma-500">
+                                    <span class="ml-3 text-gray-700">付费活动</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="registration_type" value="invite_only" class="text-luma-500 focus:ring-luma-500">
+                                    <span class="ml-3 text-gray-700">仅限邀请</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Price (shown when paid is selected) -->
+                        <div id="price_section" class="hidden">
+                            <label for="price" class="block text-sm font-medium text-gray-700 mb-2">
+                                活动价格 (CNY)
+                            </label>
+                            <input
+                                type="number"
+                                id="price"
+                                name="price"
+                                class="form-input focus-ring"
+                                placeholder="0.00"
+                                min="0"
+                                step="0.01"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Additional Settings -->
+                    <div class="space-y-6">
+                        <h2 class="text-2xl font-semibold text-gray-900 border-b border-gray-200 pb-3">
+                            其他设置
+                        </h2>
+
+                        <div class="space-y-4">
+                            <label class="flex items-start">
+                                <input type="checkbox" name="require_approval" class="mt-1 text-luma-500 focus:ring-luma-500">
+                                <div class="ml-3">
+                                    <span class="text-gray-700 font-medium">需要审核</span>
+                                    <p class="text-sm text-gray-500">参与者需要等待组织者审核通过</p>
+                                </div>
+                            </label>
+
+                            <label class="flex items-start">
+                                <input type="checkbox" name="allow_waitlist" class="mt-1 text-luma-500 focus:ring-luma-500">
+                                <div class="ml-3">
+                                    <span class="text-gray-700 font-medium">允许候补名单</span>
+                                    <p class="text-sm text-gray-500">当活动满员时，允许用户加入候补名单</p>
+                                </div>
+                            </label>
+
+                            <label class="flex items-start">
+                                <input type="checkbox" name="send_reminders" class="mt-1 text-luma-500 focus:ring-luma-500" checked>
+                                <div class="ml-3">
+                                    <span class="text-gray-700 font-medium">发送提醒</span>
+                                    <p class="text-sm text-gray-500">在活动开始前自动发送邮件提醒</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="flex flex-col sm:flex-row gap-4 pt-8 border-t border-gray-200">
+                        <button
+                            type="submit"
+                            class="btn-primary flex-1 sm:flex-none sm:px-12 flex items-center justify-center space-x-2"
+                        >
+                            <i class="fas fa-calendar-plus"></i>
+                            <span>创建活动</span>
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn-secondary flex-1 sm:flex-none sm:px-8 flex items-center justify-center space-x-2"
+                        >
+                            <i class="fas fa-eye"></i>
+                            <span>预览</span>
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn-ghost flex-1 sm:flex-none sm:px-8 flex items-center justify-center space-x-2"
+                        >
+                            <i class="fas fa-save"></i>
+                            <span>保存草稿</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tips Card -->
+            <div class="card mt-8 p-6 bg-luma-50 border-luma-200">
+                <h3 class="text-lg font-semibold text-luma-800 mb-3 flex items-center">
+                    <i class="fas fa-lightbulb mr-2"></i>
+                    创建活动小贴士
+                </h3>
+                <ul class="space-y-2 text-luma-700">
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle mt-1 mr-2 text-luma-500"></i>
+                        <span>使用清晰有吸引力的标题，让人一眼就知道活动内容</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle mt-1 mr-2 text-luma-500"></i>
+                        <span>详细描述活动流程和预期收获，帮助参与者了解活动价值</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle mt-1 mr-2 text-luma-500"></i>
+                        <span>提供准确的时间和地点信息，方便参与者安排行程</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle mt-1 mr-2 text-luma-500"></i>
+                        <span>设置合理的参与人数限制，确保活动质量和体验</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Form interactivity
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('create-event-form');
+        const registrationTypeInputs = document.querySelectorAll('input[name="registration_type"]');
+        const priceSection = document.getElementById('price_section');
+
+        // Show/hide price section based on registration type
+        registrationTypeInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                if (this.value === 'paid') {
+                    priceSection.classList.remove('hidden');
+                    document.getElementById('price').required = true;
+                } else {
+                    priceSection.classList.add('hidden');
+                    document.getElementById('price').required = false;
+                }
+            });
+        });
+
+        // Auto-fill end date when start date changes
+        const startDateInput = document.getElementById('start_date');
+        const endDateInput = document.getElementById('end_date');
+
+        startDateInput.addEventListener('change', function() {
+            if (!endDateInput.value) {
+                endDateInput.value = this.value;
+            }
+        });
+
+        // Form validation and submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Add loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner animate-spin mr-2"></i>创建中...';
+            submitBtn.disabled = true;
+
+            // Simulate API call
+            setTimeout(() => {
+                // Show success message
+                showNotification('活动创建成功！', 'success');
+
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+
+                // Redirect or reset form
+                // window.location.href = '/events/success';
+            }, 2000);
+        });
+
+        // Save draft functionality
+        const saveDraftBtn = form.querySelector('button[type="button"]:last-child');
+        saveDraftBtn.addEventListener('click', function() {
+            showNotification('草稿已保存', 'info');
+        });
+    });
+
+    // Notification system
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm animate-slide-down ${
+            type === 'success' ? 'bg-green-500 text-white' :
+            type === 'error' ? 'bg-red-500 text-white' :
+            'bg-blue-500 text-white'
+        }`;
+
+        notification.innerHTML = `
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            </div>
+        `;
+
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+</script>
+{% endblock %}

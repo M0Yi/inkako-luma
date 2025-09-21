@@ -1,0 +1,261 @@
+{% extends "layout/page.html" %}
+
+{% block title %}创建活动 - Luma{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<section class="py-5 mt-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="container text-center text-white">
+        <h1 class="display-5 fw-bold mb-3">创建您的活动</h1>
+        <p class="lead">几分钟内创建专业的活动页面</p>
+    </div>
+</section>
+
+<!-- Create Event Form -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-lg">
+                    <div class="card-body p-5">
+                        <form id="createEventForm">
+                            <!-- 基本信息 -->
+                            <div class="section-header mb-4">
+                                <h3 class="mb-2">基本信息</h3>
+                                <p class="text-muted">告诉大家您的活动是什么</p>
+                            </div>
+
+                            <div class="row g-4 mb-5">
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">活动标题 *</label>
+                                    <input type="text" class="form-control form-control-lg" placeholder="例如：科技创新大会 2024" required>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">活动描述 *</label>
+                                    <textarea class="form-control" rows="4" placeholder="描述您的活动内容、目标和亮点..." required></textarea>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">活动分类 *</label>
+                                    <select class="form-select" required>
+                                        <option value="">选择分类</option>
+                                        <option value="tech">科技</option>
+                                        <option value="business">商业</option>
+                                        <option value="design">设计</option>
+                                        <option value="education">教育</option>
+                                        <option value="entertainment">娱乐</option>
+                                        <option value="health">健康</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">活动类型 *</label>
+                                    <select class="form-select" required>
+                                        <option value="">选择类型</option>
+                                        <option value="offline">线下活动</option>
+                                        <option value="online">线上活动</option>
+                                        <option value="hybrid">混合活动</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- 时间地点 -->
+                            <div class="section-header mb-4">
+                                <h3 class="mb-2">时间地点</h3>
+                                <p class="text-muted">设置活动的具体时间和地点</p>
+                            </div>
+
+                            <div class="row g-4 mb-5">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">开始日期 *</label>
+                                    <input type="date" class="form-control" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">开始时间 *</label>
+                                    <input type="time" class="form-control" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">结束日期</label>
+                                    <input type="date" class="form-control">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">结束时间</label>
+                                    <input type="time" class="form-control">
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">活动地点 *</label>
+                                    <input type="text" class="form-control" placeholder="例如：上海国际会议中心 或 在线直播" required>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">详细地址</label>
+                                    <input type="text" class="form-control" placeholder="详细地址（可选）">
+                                </div>
+                            </div>
+
+                            <!-- 门票设置 -->
+                            <div class="section-header mb-4">
+                                <h3 class="mb-2">门票设置</h3>
+                                <p class="text-muted">设置门票价格和参与人数</p>
+                            </div>
+
+                            <div class="row g-4 mb-5">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">门票类型 *</label>
+                                    <select class="form-select" id="ticketType" required>
+                                        <option value="free">免费</option>
+                                        <option value="paid">付费</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4" id="priceField" style="display: none;">
+                                    <label class="form-label fw-semibold">门票价格 (¥)</label>
+                                    <input type="number" class="form-control" placeholder="0" min="0">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">最大参与人数</label>
+                                    <input type="number" class="form-control" placeholder="不限制" min="1">
+                                </div>
+                            </div>
+
+                            <!-- 联系信息 -->
+                            <div class="section-header mb-4">
+                                <h3 class="mb-2">联系信息</h3>
+                                <p class="text-muted">方便参与者联系您</p>
+                            </div>
+
+                            <div class="row g-4 mb-5">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">联系人姓名 *</label>
+                                    <input type="text" class="form-control" placeholder="您的姓名" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">联系邮箱 *</label>
+                                    <input type="email" class="form-control" placeholder="your@email.com" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">联系电话</label>
+                                    <input type="tel" class="form-control" placeholder="手机号码（可选）">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">组织名称</label>
+                                    <input type="text" class="form-control" placeholder="公司或组织名称（可选）">
+                                </div>
+                            </div>
+
+                            <!-- 提交按钮 -->
+                            <div class="text-center">
+                                <button type="button" class="btn btn-outline-secondary btn-lg me-3 px-5">
+                                    <i class="fas fa-eye me-2"></i>
+                                    预览
+                                </button>
+                                <button type="submit" class="btn btn-primary btn-lg px-5">
+                                    <i class="fas fa-check me-2"></i>
+                                    创建活动
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block styles %}
+<style>
+.section-header {
+    border-left: 4px solid var(--luma-primary);
+    padding-left: 1rem;
+}
+
+.form-label {
+    color: var(--luma-dark);
+    margin-bottom: 0.5rem;
+}
+
+.form-control, .form-select {
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--luma-primary);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-control-lg {
+    font-size: 1.1rem;
+    padding: 1rem 1.25rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--luma-primary) 0%, var(--luma-secondary) 100%);
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-outline-secondary {
+    border: 2px solid #e5e7eb;
+    color: var(--luma-text);
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #f9fafb;
+    border-color: var(--luma-primary);
+    color: var(--luma-primary);
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 门票类型切换
+    const ticketType = document.getElementById('ticketType');
+    const priceField = document.getElementById('priceField');
+
+    ticketType.addEventListener('change', function() {
+        if (this.value === 'paid') {
+            priceField.style.display = 'block';
+            priceField.querySelector('input').required = true;
+        } else {
+            priceField.style.display = 'none';
+            priceField.querySelector('input').required = false;
+        }
+    });
+
+    // 表单提交
+    const form = document.getElementById('createEventForm');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // 这里可以添加表单验证和提交逻辑
+        alert('活动创建成功！（演示功能）');
+    });
+});
+</script>
+{% endblock %}

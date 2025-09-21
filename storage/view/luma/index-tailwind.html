@@ -1,0 +1,310 @@
+{% extends "layout/landing.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative bg-gradient-to-br from-luma-50 via-white to-luma-100 overflow-hidden">
+    <!-- Background decoration -->
+    <div class="absolute inset-0 opacity-5">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-luma-500 rounded-full mix-blend-multiply filter blur-xl animate-bounce-gentle"></div>
+        <div class="absolute top-40 right-10 w-72 h-72 bg-luma-secondary-500 rounded-full mix-blend-multiply filter blur-xl animate-bounce-gentle" style="animation-delay: 1s;"></div>
+        <div class="absolute -bottom-8 left-1/2 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl animate-bounce-gentle" style="animation-delay: 2s;"></div>
+    </div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+        <div class="text-center animate-fade-in">
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
+                <span class="gradient-text">精彩活动</span>
+                <br>
+                <span class="text-gray-800">从这里开始</span>
+            </h1>
+
+            <p class="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+                发现身边有趣的活动，结识志同道合的朋友，创造美好的回忆
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+                <a href="/events" class="bg-gradient-to-r from-luma-500 to-luma-secondary-500 text-white px-8 py-4 rounded-full text-lg font-semibold hover-lift flex items-center space-x-2">
+                    <i class="fas fa-search"></i>
+                    <span>发现活动</span>
+                </a>
+                <a href="/create" class="bg-white text-luma-500 border-2 border-luma-500 px-8 py-4 rounded-full text-lg font-semibold hover:bg-luma-50 transition-colors flex items-center space-x-2">
+                    <i class="fas fa-plus"></i>
+                    <span>创建活动</span>
+                </a>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <div class="text-center animate-slide-up" style="animation-delay: 0.2s;">
+                    <div class="text-3xl md:text-4xl font-bold gradient-text mb-2">10K+</div>
+                    <div class="text-gray-600">活跃用户</div>
+                </div>
+                <div class="text-center animate-slide-up" style="animation-delay: 0.4s;">
+                    <div class="text-3xl md:text-4xl font-bold gradient-text mb-2">5K+</div>
+                    <div class="text-gray-600">成功举办</div>
+                </div>
+                <div class="text-center animate-slide-up" style="animation-delay: 0.6s;">
+                    <div class="text-3xl md:text-4xl font-bold gradient-text mb-2">50+</div>
+                    <div class="text-gray-600">覆盖城市</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                为什么选择 <span class="gradient-text">Luma</span>？
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                我们致力于让活动组织变得简单、高效、有趣
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="bg-white rounded-2xl p-8 shadow-lg hover-lift border border-gray-100">
+                <div class="w-16 h-16 bg-gradient-to-r from-luma-500 to-luma-secondary-500 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fas fa-rocket text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">快速创建</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    几分钟内即可创建专业的活动页面，支持多种活动类型和自定义设置
+                </p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="bg-white rounded-2xl p-8 shadow-lg hover-lift border border-gray-100">
+                <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fas fa-users text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">智能推荐</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    基于兴趣和位置的智能算法，为用户推荐最相关的活动内容
+                </p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="bg-white rounded-2xl p-8 shadow-lg hover-lift border border-gray-100">
+                <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fas fa-chart-line text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">数据分析</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    详细的活动数据分析，帮助组织者了解活动效果，优化未来策划
+                </p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="bg-white rounded-2xl p-8 shadow-lg hover-lift border border-gray-100">
+                <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fas fa-mobile-alt text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">移动优先</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    完美适配各种设备，随时随地管理和参与活动，体验流畅自然
+                </p>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="bg-white rounded-2xl p-8 shadow-lg hover-lift border border-gray-100">
+                <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fas fa-shield-alt text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">安全可靠</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    企业级安全保障，保护用户隐私和数据安全，让您放心使用
+                </p>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="bg-white rounded-2xl p-8 shadow-lg hover-lift border border-gray-100">
+                <div class="w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fas fa-heart text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">社区驱动</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    活跃的用户社区，分享经验、互相帮助，让活动组织更有温度
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Popular Events Section -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                热门活动
+            </h2>
+            <p class="text-xl text-gray-600">
+                发现正在进行的精彩活动
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Event Card 1 -->
+            <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover-lift">
+                <div class="h-48 bg-gradient-to-r from-luma-500 to-luma-secondary-500"></div>
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="bg-luma-100 text-luma-700 px-3 py-1 rounded-full text-sm font-medium">
+                            科技
+                        </span>
+                        <span class="text-gray-500 text-sm">
+                            <i class="fas fa-calendar-alt mr-1"></i>
+                            3月15日
+                        </span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                        AI 技术分享会
+                    </h3>
+                    <p class="text-gray-600 mb-4">
+                        探索人工智能的最新发展，与行业专家面对面交流
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center text-gray-500">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            <span class="text-sm">北京·中关村</span>
+                        </div>
+                        <div class="flex items-center text-gray-500">
+                            <i class="fas fa-users mr-1"></i>
+                            <span class="text-sm">128人参与</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Card 2 -->
+            <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover-lift">
+                <div class="h-48 bg-gradient-to-r from-green-500 to-teal-500"></div>
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                            户外
+                        </span>
+                        <span class="text-gray-500 text-sm">
+                            <i class="fas fa-calendar-alt mr-1"></i>
+                            3月20日
+                        </span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                        春季徒步活动
+                    </h3>
+                    <p class="text-gray-600 mb-4">
+                        享受春日阳光，与朋友一起探索美丽的自然风光
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center text-gray-500">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            <span class="text-sm">上海·崇明岛</span>
+                        </div>
+                        <div class="flex items-center text-gray-500">
+                            <i class="fas fa-users mr-1"></i>
+                            <span class="text-sm">45人参与</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Card 3 -->
+            <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover-lift">
+                <div class="h-48 bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium">
+                            艺术
+                        </span>
+                        <span class="text-gray-500 text-sm">
+                            <i class="fas fa-calendar-alt mr-1"></i>
+                            3月25日
+                        </span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                        摄影作品展
+                    </h3>
+                    <p class="text-gray-600 mb-4">
+                        欣赏优秀摄影作品，学习摄影技巧和创作理念
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center text-gray-500">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            <span class="text-sm">深圳·南山区</span>
+                        </div>
+                        <div class="flex items-center text-gray-500">
+                            <i class="fas fa-users mr-1"></i>
+                            <span class="text-sm">89人参与</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-12">
+            <a href="/events" class="bg-gradient-to-r from-luma-500 to-luma-secondary-500 text-white px-8 py-3 rounded-full font-semibold hover-lift inline-flex items-center space-x-2">
+                <span>查看更多活动</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 bg-gradient-to-r from-luma-500 to-luma-secondary-500">
+    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
+            准备开始你的活动之旅了吗？
+        </h2>
+        <p class="text-xl text-luma-100 mb-8">
+            加入我们，发现更多精彩，创造美好回忆
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/register" class="bg-white text-luma-500 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-colors inline-flex items-center justify-center space-x-2">
+                <i class="fas fa-user-plus"></i>
+                <span>立即注册</span>
+            </a>
+            <a href="/demo" class="border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white hover:text-luma-500 transition-colors inline-flex items-center justify-center space-x-2">
+                <i class="fas fa-play"></i>
+                <span>观看演示</span>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Intersection Observer for animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-fade-in');
+            }
+        });
+    }, observerOptions);
+
+    // Observe all cards and sections
+    document.querySelectorAll('.hover-lift, .animate-slide-up').forEach(el => {
+        observer.observe(el);
+    });
+
+    // Smooth parallax effect for hero background
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const rate = scrolled * -0.5;
+        const heroBackground = document.querySelector('section .absolute.inset-0');
+        if (heroBackground) {
+            heroBackground.style.transform = `translateY(${rate}px)`;
+        }
+    });
+</script>
+{% endblock %}

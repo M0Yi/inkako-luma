@@ -1,0 +1,5 @@
+---
+description:模版渲染语法 使用 $this->render->render 路由声明不能在routes.php内重复申明，
+globs: 模版渲染语法 使用 $this->render->render 路由声明不能在routes.php内重复申明 使用Tailwind CDN作为样式
+alwaysApply: true
+---

@@ -1,0 +1,185 @@
+{% extends "layout/page.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- 成功提示卡片 -->
+        <div class="card border-success">
+            <div class="card-header bg-success text-white text-center">
+                <div class="py-3">
+                    <i class="fas fa-check-circle fa-4x mb-3"></i>
+                    <h2 class="mb-0">消息发送成功！</h2>
+                    <p class="mb-0 opacity-75">感谢您的反馈</p>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <div class="alert alert-success" role="alert">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>{{ name }}</strong>，您的消息已经成功发送！我们会在24小时内回复您。
+                </div>
+
+                <!-- 提交的信息回显 -->
+                <h5 class="mb-3">
+                    <i class="fas fa-eye me-2 text-primary"></i>您提交的信息
+                </h5>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title text-primary">
+                                    <i class="fas fa-user me-1"></i>姓名
+                                </h6>
+                                <p class="card-text">{{ name|escape }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title text-success">
+                                    <i class="fas fa-envelope me-1"></i>邮箱
+                                </h6>
+                                <p class="card-text">
+                                    <a href="mailto:{{ email|escape }}" class="text-decoration-none">
+                                        {{ email|escape }}
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-light mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title text-info">
+                            <i class="fas fa-comment me-1"></i>消息内容
+                        </h6>
+                        <div class="border-start border-3 border-info ps-3">
+                            <p class="card-text">{{ message|nl2br|escape }}</p>
+                        </div>
+                        <small class="text-muted">
+                            <i class="fas fa-clock me-1"></i>
+                            发送时间: {{ "now"|date("Y-m-d H:i:s") }}
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Twig 数据处理演示 -->
+                <div class="card border-info mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h6 class="mb-0">
+                            <i class="fas fa-code me-2"></i>Twig 数据处理演示
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="text-primary">字符串处理</h6>
+                                <ul class="list-unstyled ms-3">
+                                    <li><strong>姓名长度:</strong> {{ name|length }} 个字符</li>
+                                    <li><strong>姓名大写:</strong> {{ name|upper }}</li>
+                                    <li><strong>邮箱域名:</strong> {{ email|split('@')[1] ?? '未知' }}</li>
+                                    <li><strong>消息字数:</strong> {{ message|length }} 字符</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-success">安全特性</h6>
+                                <ul class="list-unstyled ms-3">
+                                    <li>✅ 自动 HTML 转义</li>
+                                    <li>✅ 换行符转换</li>
+                                    <li>✅ XSS 攻击防护</li>
+                                    <li>✅ 数据验证</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <a href="/demo" class="btn btn-primary btn-lg">
+                        <i class="fas fa-home me-1"></i>返回首页
+                    </a>
+                    <a href="/demo/form" class="btn btn-outline-success btn-lg">
+                        <i class="fas fa-plus me-1"></i>再发一条
+                    </a>
+                    <a href="/demo/user/1" class="btn btn-outline-info btn-lg">
+                        <i class="fas fa-user me-1"></i>用户资料
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 下一步建议 -->
+        <div class="card mt-4 border-warning">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">
+                    <i class="fas fa-lightbulb me-2"></i>下一步建议
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="p-3">
+                            <i class="fas fa-bell fa-2x text-primary mb-2"></i>
+                            <h6>关注通知</h6>
+                            <p class="text-muted small">我们会通过邮箱通知您回复</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="p-3">
+                            <i class="fas fa-question-circle fa-2x text-success mb-2"></i>
+                            <h6>查看FAQ</h6>
+                            <p class="text-muted small">常见问题可能已有答案</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="p-3">
+                            <i class="fas fa-comments fa-2x text-info mb-2"></i>
+                            <h6>社区讨论</h6>
+                            <p class="text-muted small">加入社区获得更多帮助</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 添加一些交互效果
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.transition = 'transform 0.3s ease';
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+
+    // 显示一个简单的感谢动画
+    setTimeout(() => {
+        const successIcon = document.querySelector('.fa-check-circle');
+        if (successIcon) {
+            successIcon.style.animation = 'pulse 2s infinite';
+        }
+    }, 500);
+});
+</script>
+<style>
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+</style>
+{% endblock %}
+{% endblock %}

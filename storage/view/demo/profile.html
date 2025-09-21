@@ -1,0 +1,138 @@
+{% extends "layout/page.html" %}
+
+{% block title %}{{ title }} - {{ user.name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header bg-gradient bg-primary text-white text-center">
+                <div class="py-3">
+                    <i class="fas fa-user-circle fa-3x mb-3"></i>
+                    <h2 class="card-title mb-0">{{ user.name }}</h2>
+                    <p class="card-text opacity-75">用户 ID: #{{ userId }}</p>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <h5><i class="fas fa-envelope text-primary me-2"></i>联系信息</h5>
+                        <div class="ms-3">
+                            <p class="mb-2">
+                                <strong>邮箱:</strong>
+                                <a href="mailto:{{ user.email }}" class="text-decoration-none">
+                                    {{ user.email }}
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <h5><i class="fas fa-id-badge text-success me-2"></i>角色权限</h5>
+                        <div class="ms-3">
+                            {% if user.role == 'admin' %}
+                                <span class="badge bg-danger fs-6 px-3 py-2">
+                                    <i class="fas fa-crown me-1"></i>管理员
+                                </span>
+                                <div class="mt-2 text-muted">
+                                    <small>拥有系统最高权限</small>
+                                </div>
+                            {% elseif user.role == 'moderator' %}
+                                <span class="badge bg-warning fs-6 px-3 py-2">
+                                    <i class="fas fa-shield-alt me-1"></i>版主
+                                </span>
+                                <div class="mt-2 text-muted">
+                                    <small>拥有内容管理权限</small>
+                                </div>
+                            {% else %}
+                                <span class="badge bg-secondary fs-6 px-3 py-2">
+                                    <i class="fas fa-user me-1"></i>普通用户
+                                </span>
+                                <div class="mt-2 text-muted">
+                                    <small>基础用户权限</small>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 权限详情 -->
+                <div class="row">
+                    <div class="col-12">
+                        <h5><i class="fas fa-key text-info me-2"></i>权限详情</h5>
+                        <div class="ms-3">
+                            <div class="row">
+                                {% set permissions = {
+                                    'admin': ['查看所有数据', '用户管理', '系统配置', '内容管理', '数据备份'],
+                                    'moderator': ['内容管理', '用户举报处理', '评论审核'],
+                                    'user': ['查看个人数据', '修改个人资料', '发布内容']
+                                } %}
+
+                                {% for permission in permissions[user.role] %}
+                                    <div class="col-md-6 col-lg-4 mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            <small>{{ permission }}</small>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-light text-center">
+                <div class="btn-group" role="group">
+                    <a href="/demo" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left me-1"></i>返回首页
+                    </a>
+                    <a href="/demo/user/{{ userId == 3 ? 1 : userId + 1 }}" class="btn btn-outline-success">
+                        <i class="fas fa-user me-1"></i>下一个用户
+                    </a>
+                    <a href="/demo/form" class="btn btn-outline-info">
+                        <i class="fas fa-envelope me-1"></i>联系我们
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Twig 高级功能演示 -->
+        <div class="card mt-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-code me-2"></i>Twig 高级功能演示
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">字符串操作</h6>
+                        <ul class="list-unstyled ms-3">
+                            <li><strong>原始:</strong> {{ user.name }}</li>
+                            <li><strong>大写:</strong> {{ user.name|upper }}</li>
+                            <li><strong>小写:</strong> {{ user.name|lower }}</li>
+                            <li><strong>长度:</strong> {{ user.name|length }} 个字符</li>
+                            <li><strong>反转:</strong> {{ user.name|reverse }}</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">条件与逻辑</h6>
+                        <ul class="list-unstyled ms-3">
+                            <li><strong>邮箱域名:</strong> {{ user.email|split('@')[1] }}</li>
+                            <li><strong>是否管理员:</strong> {{ user.role == 'admin' ? '是' : '否' }}</li>
+                            <li><strong>用户等级:</strong>
+                                {% if user.role == 'admin' %}
+                                    <span class="text-danger">★★★</span>
+                                {% elseif user.role == 'moderator' %}
+                                    <span class="text-warning">★★☆</span>
+                                {% else %}
+                                    <span class="text-secondary">★☆☆</span>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

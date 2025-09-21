@@ -1,0 +1,248 @@
+{% extends "layout/page.html" %}
+
+{% block title %}帮助中心 - Luma{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<section class="py-5 mt-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="container text-center text-white">
+        <h1 class="display-4 fw-bold mb-3">帮助中心</h1>
+        <p class="lead">快速找到您需要的答案和解决方案</p>
+
+        <!-- Search Bar -->
+        <div class="row justify-content-center mt-4">
+            <div class="col-lg-6">
+                <div class="input-group input-group-lg">
+                    <input type="text" class="form-control" placeholder="搜索帮助文档...">
+                    <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Links -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm text-center h-100">
+                    <div class="card-body p-4">
+                        <div class="help-icon mb-3">
+                            <i class="fas fa-rocket fa-3x text-primary"></i>
+                        </div>
+                        <h4>快速开始</h4>
+                        <p class="text-muted">学习如何创建和管理您的第一个活动</p>
+                        <a href="#getting-started" class="btn btn-outline-primary">开始学习</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm text-center h-100">
+                    <div class="card-body p-4">
+                        <div class="help-icon mb-3">
+                            <i class="fas fa-video fa-3x text-primary"></i>
+                        </div>
+                        <h4>视频教程</h4>
+                        <p class="text-muted">观看详细的操作演示和最佳实践</p>
+                        <a href="#tutorials" class="btn btn-outline-primary">观看视频</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm text-center h-100">
+                    <div class="card-body p-4">
+                        <div class="help-icon mb-3">
+                            <i class="fas fa-headset fa-3x text-primary"></i>
+                        </div>
+                        <h4>联系支持</h4>
+                        <p class="text-muted">获得专业团队的一对一技术支持</p>
+                        <a href="#contact" class="btn btn-outline-primary">联系我们</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Categories -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">常见问题</h2>
+
+        {% for category in faq_categories %}
+        <div class="row mb-5">
+            <div class="col-lg-10 mx-auto">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 py-4">
+                        <h3 class="mb-0">
+                            <i class="{{ category.icon }} text-primary me-3"></i>
+                            {{ category.title }}
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="accordion" id="faq-{{ loop.index }}">
+                            {% for question in category.questions %}
+                            <div class="accordion-item border-0 border-bottom">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed border-0 bg-transparent" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#faq-{{ loop.parent.loop.index }}-{{ loop.index }}">
+                                        {{ question.q }}
+                                    </button>
+                                </h2>
+                                <div id="faq-{{ loop.parent.loop.index }}-{{ loop.index }}" class="accordion-collapse collapse"
+                                     data-bs-parent="#faq-{{ loop.parent.loop.index }}">
+                                    <div class="accordion-body">
+                                        {{ question.a }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Contact Support -->
+<section class="py-5 bg-light" id="contact">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="mb-4">需要更多帮助？</h2>
+                <p class="lead text-muted mb-5">我们的支持团队随时准备为您提供帮助</p>
+
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="contact-method">
+                            <div class="contact-icon mb-3">
+                                <i class="fas fa-comments fa-2x text-primary"></i>
+                            </div>
+                            <h5>在线客服</h5>
+                            <p class="text-muted">工作日 9:00-18:00</p>
+                            <a href="#" class="btn btn-primary">开始聊天</a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="contact-method">
+                            <div class="contact-icon mb-3">
+                                <i class="fas fa-envelope fa-2x text-primary"></i>
+                            </div>
+                            <h5>邮件支持</h5>
+                            <p class="text-muted">24小时内回复</p>
+                            <a href="mailto:support@luma.com" class="btn btn-primary">发送邮件</a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="contact-method">
+                            <div class="contact-icon mb-3">
+                                <i class="fas fa-phone fa-2x text-primary"></i>
+                            </div>
+                            <h5>电话支持</h5>
+                            <p class="text-muted">企业版用户专享</p>
+                            <a href="tel:400-123-4567" class="btn btn-primary">拨打电话</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Resources Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">更多资源</h2>
+
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-book fa-2x text-primary mb-3"></i>
+                        <h5>用户手册</h5>
+                        <p class="text-muted">详细的功能说明和操作指南</p>
+                        <a href="#" class="btn btn-outline-primary">查看手册</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-code fa-2x text-primary mb-3"></i>
+                        <h5>API 文档</h5>
+                        <p class="text-muted">开发者集成和自定义开发</p>
+                        <a href="#" class="btn btn-outline-primary">查看文档</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-graduation-cap fa-2x text-primary mb-3"></i>
+                        <h5>在线课程</h5>
+                        <p class="text-muted">活动策划和营销最佳实践</p>
+                        <a href="#" class="btn btn-outline-primary">开始学习</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users fa-2x text-primary mb-3"></i>
+                        <h5>社区论坛</h5>
+                        <p class="text-muted">与其他用户交流经验和技巧</p>
+                        <a href="#" class="btn btn-outline-primary">加入社区</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block styles %}
+<style>
+.help-icon, .contact-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.contact-method {
+    padding: 2rem;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.contact-method:hover {
+    transform: translateY(-5px);
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: rgba(99, 102, 241, 0.1);
+    color: var(--luma-primary);
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: var(--luma-primary);
+}
+</style>
+{% endblock %}

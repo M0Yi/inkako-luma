@@ -1,0 +1,2689 @@
+{% extends "layout/landing.html" %}
+
+{% block title %}创建活动 - Luma{% endblock %}
+
+{% block content %}
+<!-- Fullscreen Hero Section - 单页填满视窗 -->
+<section class="create-section">
+    <div class="create-container">
+
+        <!-- 创建表单区域 -->
+        <div class="create-form-wrapper">
+            <form class="create-form" action="/events/create" method="POST" enctype="multipart/form-data">
+                <div class="form-grid">
+                    <!-- 左侧：图片上传和主题 -->
+                    <div class="form-left">
+                        <!-- 活动封面 -->
+                        <div class="cover-upload-section">
+                            <div class="cover-upload-card">
+                                <div class="cover-preview" id="coverPreview">
+                                    <div class="cover-placeholder">
+                                        <div class="astronaut-illustration">
+                                            <i class="fas fa-rocket"></i>
+                                        </div>
+                                        <div class="upload-hint">
+                                            <i class="fas fa-camera"></i>
+                                            <span>点击上传活动封面</span>
+                                        </div>
+                                    </div>
+                                    <input type="file" id="coverInput" name="cover_image" accept="image/*" style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 主题选择 -->
+                        <div class="theme-section">
+                            <h3 class="section-title">主题</h3>
+                            <div class="theme-selector">
+                                <div class="theme-preview">
+                                    <div class="theme-color" id="selectedTheme" data-theme="elegant"></div>
+                                    <span class="theme-name">简约</span>
+                                </div>
+                                <div class="theme-options" id="themeOptions">
+                                    <div class="theme-option" data-theme="elegant" data-name="简约">
+                                        <div class="theme-color elegant"></div>
+                                    </div>
+                                    <div class="theme-option" data-theme="vibrant" data-name="活力">
+                                        <div class="theme-color vibrant"></div>
+                                    </div>
+                                    <div class="theme-option" data-theme="nature" data-name="自然">
+                                        <div class="theme-color nature"></div>
+                                    </div>
+                                    <div class="theme-option" data-theme="tech" data-name="科技">
+                                        <div class="theme-color tech"></div>
+                                    </div>
+                                </div>
+                                <button type="button" class="theme-toggle" onclick="toggleThemeOptions()">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 右侧：表单内容 -->
+                    <div class="form-right">
+                        <!-- 基本信息 -->
+                        <div class="form-section">
+                            <div class="calendar-header">
+                                <div class="calendar-type">
+                                    <i class="fas fa-user"></i>
+                                    <span>个人日历</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="visibility-toggle">
+                                    <i class="fas fa-globe"></i>
+                                    <span>公开</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                            </div>
+
+                            <!-- 活动标题 -->
+                            <div class="form-group title-group">
+                                <input
+                                    type="text"
+                                    name="title"
+                                    class="title-input"
+                                    placeholder="活动名称"
+                                    required
+                                >
+                            </div>
+
+                            <!-- 时间设置 -->
+                            <div class="time-section">
+                                <div class="time-item">
+                                    <div class="time-dot start-dot"></div>
+                                    <div class="time-label">开始</div>
+                                    <div class="time-inputs">
+                                        <input type="date" name="start_date" class="date-input" required>
+                                        <input type="time" name="start_time" class="time-input" value="13:30" required>
+                                    </div>
+                                    <div class="timezone-info">
+                                        <i class="fas fa-globe"></i>
+                                        <span>GMT+08:00</span>
+                                        <span class="location-text">上海</span>
+                                    </div>
+                                </div>
+
+                                <div class="time-item">
+                                    <div class="time-dot end-dot"></div>
+                                    <div class="time-label">结束</div>
+                                    <div class="time-inputs">
+                                        <input type="date" name="end_date" class="date-input" required>
+                                        <input type="time" name="end_time" class="time-input" value="14:30" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 地点设置 -->
+                            <div class="location-section">
+                                <div class="location-header">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>添加活动地点</span>
+                                </div>
+                                <div class="location-subtitle">线下地点或线上链接</div>
+                                <div class="location-input-group">
+                                    <input
+                                        type="text"
+                                        name="location"
+                                        class="location-input"
+                                        placeholder="输入地址或在线会议链接"
+                                    >
+                                </div>
+                            </div>
+
+                            <!-- 活动描述 -->
+                            <div class="description-section">
+                                <div class="description-header">
+                                    <i class="fas fa-align-left"></i>
+                                    <span>添加描述</span>
+                                </div>
+                                <textarea
+                                    name="description"
+                                    class="description-textarea"
+                                    placeholder="详细介绍您的活动内容、议程安排、注意事项等..."
+                                    rows="4"
+                                ></textarea>
+                            </div>
+                        </div>
+
+                        <!-- 活动选项 -->
+                        <div class="options-section">
+                            <h3 class="section-title">活动选项</h3>
+
+                            <!-- 门票设置 -->
+                            <div class="option-item">
+                                <div class="option-header">
+                                    <i class="fas fa-ticket-alt"></i>
+                                    <span class="option-label">门票</span>
+                                    <div class="option-value">
+                                        <span class="free-tag">免费</span>
+                                        <i class="fas fa-edit"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 审核设置 -->
+                            <div class="option-item">
+                                <div class="option-header">
+                                    <i class="fas fa-user-check"></i>
+                                    <span class="option-label">需要审核</span>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="requireApproval" name="require_approval" class="toggle-input">
+                                        <label for="requireApproval" class="toggle-label"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 人数限制 -->
+                            <div class="option-item">
+                                <div class="option-header">
+                                    <i class="fas fa-users"></i>
+                                    <span class="option-label">人数限制</span>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="limitCapacity" name="limit_capacity" class="toggle-input">
+                                        <label for="limitCapacity" class="toggle-label"></label>
+                                    </div>
+                                </div>
+                                <div class="capacity-input-section" id="capacityInputSection" style="display: none;">
+                                    <div class="capacity-input-wrapper">
+                                        <span class="capacity-label">最多</span>
+                                        <input type="number" id="capacityNumber" name="max_capacity" class="capacity-input" placeholder="100" min="1" max="10000">
+                                        <span class="capacity-label">人</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 座位排布 -->
+                            <div class="option-item">
+                                <div class="option-header">
+                                    <i class="fas fa-th-large"></i>
+                                    <span class="option-label">座位排布</span>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="seatLayout" name="seat_layout" class="toggle-input">
+                                        <label for="seatLayout" class="toggle-label"></label>
+                                    </div>
+                                </div>
+                                <div class="seat-layout-hint" id="seatLayoutHint">
+                                    <small class="hint-text">开启后可以设置座位排布图</small>
+                                </div>
+                                <div class="seat-layout-config" id="seatLayoutConfig" style="display: none;">
+                                    <button type="button" class="seat-layout-btn" id="openSeatLayoutBtn">
+                                        <i class="fas fa-chair"></i> 设置座位排布
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 创建按钮 -->
+                <div class="form-actions">
+                    <button type="submit" class="create-btn">
+                        <i class="fas fa-plus-circle"></i>
+                        创建活动
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block styles %}
+/* 首页专用 - 透明导航栏 */
+nav {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    border-bottom: none !important;
+}
+
+/* 创建页面容器 */
+.create-section {
+    position: relative;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+    padding: 8rem 0 4rem 0;
+}
+
+.create-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.05"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.05"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.08"/><circle cx="20" cy="80" r="0.5" fill="white" opacity="0.08"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    pointer-events: none;
+}
+
+.create-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+
+/* 表单包装器 */
+.create-form-wrapper {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 3rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+/* 表单网格布局 */
+.form-grid {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 3rem;
+    margin-bottom: 2rem;
+}
+
+/* 左侧区域 */
+.form-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* 封面上传 */
+.cover-upload-card {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.cover-preview {
+    width: 100%;
+    height: 300px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cover-preview:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.cover-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.astronaut-illustration {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+}
+
+.upload-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+/* 主题选择 */
+.theme-section {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 2px solid #e2e8f0;
+}
+
+.section-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.theme-selector {
+    position: relative;
+}
+
+.theme-preview {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.theme-preview:hover {
+    border-color: #6366f1;
+}
+
+.theme-color {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    position: relative;
+}
+
+.theme-color.elegant {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+}
+
+.theme-color.vibrant {
+    background: linear-gradient(135deg, #fef3c7 0%, #f59e0b 100%);
+}
+
+.theme-color.nature {
+    background: linear-gradient(135deg, #d1fae5 0%, #10b981 100%);
+}
+
+.theme-color.tech {
+    background: linear-gradient(135deg, #ddd6fe 0%, #8b5cf6 100%);
+}
+
+.theme-name {
+    font-weight: 500;
+    color: #374151;
+}
+
+.theme-toggle {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    color: #6366f1;
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.theme-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    display: none;
+}
+
+.theme-options.show {
+    display: block;
+}
+
+.theme-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.theme-option:hover {
+    background: #f8fafc;
+}
+
+/* 右侧表单区域 */
+.form-right {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* 日历头部 */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.calendar-type, .visibility-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.calendar-type:hover, .visibility-toggle:hover {
+    background: #e2e8f0;
+}
+
+/* 标题输入 */
+.title-group {
+    margin-bottom: 2rem;
+}
+
+.title-input {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    font-size: 2rem;
+    font-weight: 600;
+    background: transparent;
+    color: #1f2937;
+    outline: none;
+    border-bottom: 3px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.title-input:focus {
+    border-bottom-color: #6366f1;
+}
+
+.title-input::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+/* 时间设置 */
+.time-section {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 2px solid #e2e8f0;
+}
+
+.time-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.time-item:last-child {
+    margin-bottom: 0;
+}
+
+.time-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.start-dot {
+    background: #10b981;
+}
+
+.end-dot {
+    background: #6b7280;
+}
+
+.time-label {
+    font-weight: 500;
+    color: #374151;
+    min-width: 40px;
+}
+
+.time-inputs {
+    display: flex;
+    gap: 0.75rem;
+    flex: 1;
+}
+
+.date-input, .time-input {
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.date-input:focus, .time-input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.timezone-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-left: auto;
+}
+
+.location-text {
+    font-weight: 500;
+}
+
+/* 地点设置 */
+.location-section {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 2px solid #e2e8f0;
+}
+
+.location-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.location-subtitle {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 1rem;
+}
+
+.location-input {
+    width: 100%;
+    padding: 0.875rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.location-input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* 描述设置 */
+.description-section {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 2px solid #e2e8f0;
+}
+
+.description-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 1rem;
+}
+
+.description-textarea {
+    width: 100%;
+    padding: 0.875rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    background: white;
+    resize: vertical;
+    min-height: 120px;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.description-textarea:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* 活动选项 */
+.options-section {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 2px solid #e2e8f0;
+}
+
+.option-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.option-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.option-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.option-header i {
+    color: #6b7280;
+    margin-right: 0.75rem;
+}
+
+.option-label {
+    font-weight: 500;
+    color: #374151;
+    flex: 1;
+}
+
+.option-value {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.free-tag, .unlimited-tag {
+    background: #d1fae5;
+    color: #065f46;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* 开关切换 */
+.toggle-switch {
+    position: relative;
+}
+
+.toggle-input {
+    display: none;
+}
+
+.toggle-label {
+    display: block;
+    width: 48px;
+    height: 24px;
+    background: #e2e8f0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.toggle-label::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-input:checked + .toggle-label {
+    background: #6366f1;
+}
+
+.toggle-input:checked + .toggle-label::after {
+    left: 26px;
+}
+
+/* 人数输入区域 */
+.capacity-input-section {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    border: 2px solid #e2e8f0;
+    animation: slideDown 0.3s ease-out;
+}
+
+.capacity-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.capacity-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.capacity-input {
+    width: 80px;
+    padding: 0.5rem 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-align: center;
+    background: #f8fafc;
+    transition: all 0.3s ease;
+}
+
+.capacity-input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    background: white;
+}
+
+/* 座位排布提示 */
+.seat-layout-hint {
+    margin-top: 0.5rem;
+    padding-left: 2rem;
+}
+
+/* 座位排布配置按钮 */
+.seat-layout-config {
+    margin-top: 0.75rem;
+    padding-left: 2rem;
+}
+
+.seat-layout-btn {
+    background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.25);
+}
+
+.seat-layout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
+}
+
+.seat-layout-btn:active {
+    transform: translateY(0);
+}
+
+/* 座位排布弹出页面 */
+.seat-layout-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.seat-layout-container {
+    background: white;
+    width: 95%;
+    height: 90%;
+    max-width: 1400px;
+    max-height: 900px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.seat-layout-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.seat-layout-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.seat-layout-body {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+.seat-layout-sidebar {
+    width: 320px;
+    min-width: 300px;
+    max-width: 400px;
+    background: #f8fafc;
+    border-right: 1px solid #e2e8f0;
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex-shrink: 0; /* 防止被挤压 */
+}
+
+.seat-layout-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    background: white;
+}
+
+.control-section {
+    margin-bottom: 2rem;
+}
+
+.control-section h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1f2937;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0.5rem;
+}
+
+.control-group {
+    margin-bottom: 1rem;
+}
+
+.control-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+.control-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: border-color 0.3s ease;
+}
+
+.control-group input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.table-config {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.table-preview {
+    width: 80px;
+    height: 60px;
+    margin: 0 auto 1rem;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #6b7280;
+    position: relative;
+}
+
+.table-preview.round-table {
+    border-radius: 50%;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde047 100%);
+}
+
+.table-preview.long-table {
+    background: linear-gradient(135deg, #dbeafe 0%, #60a5fa 100%);
+}
+
+.add-table-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.add-table-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.clear-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.clear-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+.layout-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.control-btn {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.control-btn:hover {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+.control-btn:disabled {
+    background: #f8fafc;
+    color: #cbd5e1;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.control-btn:disabled:hover {
+    background: #f8fafc;
+    color: #cbd5e1;
+}
+
+.grid-wrapper {
+    flex: 1;
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: grab;
+    /* 启用双向滚动 */
+    overflow-x: auto;
+    overflow-y: auto;
+    /* 移动端优化 */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+.grid-wrapper:active {
+    cursor: grabbing;
+}
+
+.grid-wrapper.panning {
+    cursor: grabbing;
+    user-select: none;
+}
+
+/* 美化滚动条 */
+.grid-wrapper::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.grid-wrapper::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+.grid-wrapper::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.grid-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.grid-wrapper::-webkit-scrollbar-corner {
+    background: #f1f5f9;
+}
+
+.seat-grid {
+    display: grid;
+    gap: 2px;
+    background: #f3f4f6;
+    padding: 10px;
+    border-radius: 8px;
+    /* 确保网格可以超出容器并显示滚动条 */
+    min-width: max-content;
+    min-height: max-content;
+    /* 在容器中居中，但允许溢出 */
+    margin: auto;
+}
+
+.seat-cell {
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-size: 0.7rem;
+    color: #6b7280;
+}
+
+.seat-cell:hover {
+    background: #f3f4f6;
+    transform: scale(1.1);
+    z-index: 10;
+}
+
+.seat-cell.occupied {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border-color: #059669;
+}
+
+.seat-cell.occupied:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.seat-cell.aisle {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border-color: #d97706;
+}
+
+.seat-cell.aisle:hover {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+}
+
+.seat-cell.drag-preview {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.1s ease;
+    z-index: 10;
+    position: relative;
+    border: 2px solid #3b82f6;
+}
+
+.seat-legend {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 1px solid #d1d5db;
+}
+
+.legend-color.empty {
+    background: white;
+}
+
+.legend-color.occupied {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.legend-color.aisle {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+/* 座位统计样式 */
+.seat-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-bottom: 0.25rem;
+}
+
+.stat-value {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* 座位类型选择器样式 */
+.seat-type-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.seat-type-option {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.seat-type-option:hover {
+    border-color: #cbd5e1;
+    background: #f1f5f9;
+}
+
+.seat-type-option.active {
+    border-color: #3b82f6;
+    background: #eff6ff;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.seat-type-preview {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    margin-right: 0.75rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.seat-type-option span {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+/* 不同座位类型的样式 */
+.seat-cell.available {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border-color: #059669;
+}
+
+.seat-cell.locked {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color: white;
+    border-color: #4b5563;
+}
+
+.seat-cell.special {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+    border-color: #7c3aed;
+}
+
+.seat-cell.vip {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border-color: #d97706;
+}
+
+.seat-cell.disabled {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    border-color: #dc2626;
+}
+
+/* 图例颜色更新 */
+.legend-color.available {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.legend-color.locked {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+}
+
+.legend-color.special {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.legend-color.vip {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.legend-color.disabled {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.seat-layout-footer {
+    background: #f8fafc;
+    padding: 1.5rem 2rem;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.cancel-btn {
+    background: white;
+    color: #64748b;
+    border: 2px solid #e2e8f0;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.save-btn {
+    background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.save-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+}
+
+/* 响应式设计 - 座位排布 */
+@media (max-width: 1200px) {
+    .seat-layout-sidebar {
+        width: 300px;
+        min-width: 280px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .seat-layout-sidebar {
+        width: 280px;
+        min-width: 260px;
+    }
+}
+
+@media (max-width: 768px) {
+    .seat-layout-container {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+    }
+
+    .seat-layout-body {
+        flex-direction: column;
+    }
+
+    .seat-layout-sidebar {
+        width: 100%;
+        min-width: unset;
+        max-width: unset;
+        height: auto;
+        max-height: 200px;
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+        flex-shrink: 1; /* 在移动端允许收缩 */
+    }
+
+    .seat-layout-header {
+        padding: 1rem;
+    }
+
+    .seat-layout-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .seat-layout-main {
+        padding: 1rem;
+    }
+
+    .grid-wrapper {
+        min-height: 300px;
+    }
+}
+
+.hint-text {
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* 动画效果 */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 100px;
+    }
+}
+
+/* 创建按钮 */
+.form-actions {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 2px solid #e2e8f0;
+}
+
+.create-btn {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    border: none;
+    padding: 1.25rem 3rem;
+    border-radius: 16px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+}
+
+.create-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
+}
+
+.create-btn:active {
+    transform: translateY(-1px);
+}
+
+/* 动画 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .form-left {
+        order: 1;
+    }
+
+    .form-right {
+        order: 0;
+    }
+
+    .cover-preview {
+        height: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .create-container {
+        padding: 0 1rem;
+    }
+
+    .create-form-wrapper {
+        padding: 2rem;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+    }
+
+    .title-input {
+        font-size: 1.5rem;
+    }
+
+    .time-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .time-inputs {
+        width: 100%;
+    }
+
+    .timezone-info {
+        margin-left: 0;
+        margin-top: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .create-form-wrapper {
+        padding: 1.5rem;
+    }
+
+    .page-title {
+        font-size: 2rem;
+    }
+
+    .create-btn {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+    }
+}
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 页面加载动画
+    const animateElements = document.querySelectorAll('.create-form-wrapper');
+    animateElements.forEach((element, index) => {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(30px)';
+
+        setTimeout(() => {
+            element.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+            element.style.opacity = '1';
+            element.style.transform = 'translateY(0)';
+        }, index * 200);
+    });
+
+    // 封面图片上传
+    const coverPreview = document.getElementById('coverPreview');
+    const coverInput = document.getElementById('coverInput');
+
+    coverPreview.addEventListener('click', () => {
+        coverInput.click();
+    });
+
+    coverInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                coverPreview.style.backgroundImage = `url(${e.target.result})`;
+                coverPreview.style.backgroundSize = 'cover';
+                coverPreview.style.backgroundPosition = 'center';
+                coverPreview.querySelector('.cover-placeholder').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // 设置默认日期
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const startDateInput = document.querySelector('input[name="start_date"]');
+    const endDateInput = document.querySelector('input[name="end_date"]');
+
+    if (startDateInput) {
+        startDateInput.value = tomorrow.toISOString().split('T')[0];
+    }
+    if (endDateInput) {
+        endDateInput.value = tomorrow.toISOString().split('T')[0];
+    }
+
+    // 人数限制和座位排布联动逻辑
+    const limitCapacityCheckbox = document.getElementById('limitCapacity');
+    const capacityInputSection = document.getElementById('capacityInputSection');
+    const seatLayoutCheckbox = document.getElementById('seatLayout');
+
+    // 人数限制开关事件
+    limitCapacityCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            // 开启人数限制时
+            capacityInputSection.style.display = 'block';
+            // 自动开启座位排布
+            seatLayoutCheckbox.checked = true;
+            // 显示座位排布配置按钮
+            updateSeatLayoutConfig();
+            // 聚焦到人数输入框
+            setTimeout(() => {
+                document.getElementById('capacityNumber').focus();
+            }, 300);
+        } else {
+            // 关闭人数限制时
+            capacityInputSection.style.display = 'none';
+            // 清空人数输入
+            document.getElementById('capacityNumber').value = '';
+        }
+    });
+
+    // 更新座位排布配置按钮显示
+    function updateSeatLayoutConfig() {
+        const seatLayoutConfig = document.getElementById('seatLayoutConfig');
+        if (seatLayoutCheckbox.checked) {
+            seatLayoutConfig.style.display = 'block';
+        } else {
+            seatLayoutConfig.style.display = 'none';
+        }
+    }
+
+    // 座位排布开关事件
+    seatLayoutCheckbox.addEventListener('change', updateSeatLayoutConfig);
+
+    // 座位排布功能初始化
+    const openSeatLayoutBtn = document.getElementById('openSeatLayoutBtn');
+    const seatLayoutModal = document.getElementById('seatLayoutModal');
+
+    // 打开座位排布页面
+    if (openSeatLayoutBtn && seatLayoutModal) {
+        openSeatLayoutBtn.addEventListener('click', function() {
+            seatLayoutModal.style.display = 'flex';
+            initSeatLayout();
+        });
+    }
+
+    // 自适应大小按钮事件处理
+    const autoResizeBtn = document.getElementById('autoResizeBtn');
+    if (autoResizeBtn) {
+        autoResizeBtn.addEventListener('click', function() {
+            autoResizeSeatGrid();
+        });
+    }
+
+    // 表单提交处理
+    const createForm = document.querySelector('.create-form');
+    createForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // 获取表单数据
+        const formData = new FormData(createForm);
+        const eventData = {
+            title: formData.get('title'),
+            start_date: formData.get('start_date'),
+            start_time: formData.get('start_time'),
+            end_date: formData.get('end_date'),
+            end_time: formData.get('end_time'),
+            location: formData.get('location'),
+            description: formData.get('description'),
+            require_approval: formData.get('require_approval') === 'on',
+            limit_capacity: formData.get('limit_capacity') === 'on',
+            max_capacity: formData.get('max_capacity') || null,
+            seat_layout: formData.get('seat_layout') === 'on'
+        };
+
+        // 简单验证
+        if (!eventData.title || !eventData.start_date || !eventData.start_time) {
+            alert('请填写必要的活动信息');
+            return;
+        }
+
+        // 如果开启了人数限制但没有输入具体数量
+        if (eventData.limit_capacity && (!eventData.max_capacity || eventData.max_capacity < 1)) {
+            alert('请输入有效的人数限制');
+            document.getElementById('capacityNumber').focus();
+            return;
+        }
+
+        // 模拟创建过程
+        const createBtn = document.querySelector('.create-btn');
+        const originalText = createBtn.innerHTML;
+        createBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 创建中...';
+        createBtn.disabled = true;
+
+        setTimeout(() => {
+            alert('活动创建成功！');
+            createBtn.innerHTML = originalText;
+            createBtn.disabled = false;
+            // 实际项目中这里应该跳转到活动详情页
+        }, 2000);
+    });
+});
+
+// 主题选择功能
+function toggleThemeOptions() {
+    const themeOptions = document.getElementById('themeOptions');
+    const toggleBtn = document.querySelector('.theme-toggle i');
+
+    themeOptions.classList.toggle('show');
+    toggleBtn.classList.toggle('fa-chevron-down');
+    toggleBtn.classList.toggle('fa-chevron-up');
+}
+
+// 主题选择处理
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.theme-option')) {
+        const option = e.target.closest('.theme-option');
+        const theme = option.dataset.theme;
+        const name = option.dataset.name;
+
+        const selectedTheme = document.getElementById('selectedTheme');
+        const themeName = document.querySelector('.theme-name');
+
+        selectedTheme.className = `theme-color ${theme}`;
+        selectedTheme.dataset.theme = theme;
+        themeName.textContent = name;
+
+        // 隐藏选项
+        document.getElementById('themeOptions').classList.remove('show');
+        document.querySelector('.theme-toggle i').classList.add('fa-chevron-down');
+        document.querySelector('.theme-toggle i').classList.remove('fa-chevron-up');
+    }
+
+    // 点击外部关闭主题选项
+    if (!e.target.closest('.theme-selector')) {
+        document.getElementById('themeOptions').classList.remove('show');
+        document.querySelector('.theme-toggle i').classList.add('fa-chevron-down');
+        document.querySelector('.theme-toggle i').classList.remove('fa-chevron-up');
+    }
+});
+
+// 座位排布功能将在DOMContentLoaded中初始化
+
+// 座位排布相关变量
+let seatGrid = [];
+let gridRows = 10;
+let gridCols = 10;
+let cellSize = 30;
+let currentSeatType = 'available'; // 当前选中的座位类型
+
+// 拖拽编辑相关变量
+let isDragging = false;
+let dragMode = null; // 'add' | 'remove' | 'aisle'
+let dragStartCell = null;
+let draggedCells = new Set(); // 记录已处理的单元格，避免重复处理
+
+// 画面拖动相关变量
+let isPanning = false;
+let panStartX = 0;
+let panStartY = 0;
+let panStartScrollLeft = 0;
+let panStartScrollTop = 0;
+let isSpacePressed = false;
+
+// 初始化座位排布
+function initSeatLayout() {
+    const gridContainer = document.getElementById('seatGrid');
+    initSeatTypeSelector();
+    updateSeatGrid();
+    updateSeatStats();
+
+    // 添加全局鼠标事件监听器
+    document.addEventListener('mouseup', endDrag);
+    document.addEventListener('mousemove', handleGlobalMouseMove);
+
+    // 添加拖动功能状态显示
+    function showPanHint() {
+        const gridWrapper = document.querySelector('.grid-wrapper');
+        if (!gridWrapper) return;
+
+        let hintElement = document.getElementById('panHint');
+        if (!hintElement) {
+            hintElement = document.createElement('div');
+            hintElement.id = 'panHint';
+            hintElement.style.cssText = `
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 8px 12px;
+                border-radius: 6px;
+                font-size: 12px;
+                z-index: 1000;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            `;
+            hintElement.innerHTML = '🖱️ 右键拖动 | ⌨️ 空格+左键拖动 | 📱 触摸滑动';
+            gridWrapper.appendChild(hintElement);
+        }
+
+        // 显示提示
+        hintElement.style.opacity = '1';
+        setTimeout(() => {
+            if (hintElement) hintElement.style.opacity = '0';
+        }, 3000);
+    }
+
+    // 在大网格时自动显示提示
+    const totalCells = gridRows * gridCols;
+    if (totalCells > 2000) {
+        setTimeout(showPanHint, 1000);
+    }
+    // 移除 mouseleave 监听器，因为它会过早结束拖动
+
+    // 防止选中文本
+    gridContainer.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+    });
+
+    // 初始化画面拖动功能
+    initGridPanning();
+}
+
+// 初始化座位类型选择器
+function initSeatTypeSelector() {
+    const seatTypeOptions = document.querySelectorAll('.seat-type-option');
+
+    seatTypeOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // 移除其他选项的active状态
+            seatTypeOptions.forEach(opt => opt.classList.remove('active'));
+
+            // 添加当前选项的active状态
+            this.classList.add('active');
+
+            // 更新当前座位类型
+            currentSeatType = this.dataset.type;
+        });
+    });
+}
+
+// 初始化画面拖动功能
+function initGridPanning() {
+    const gridWrapper = document.querySelector('.grid-wrapper');
+
+    if (!gridWrapper) return;
+
+    // 键盘事件监听空格键
+    document.addEventListener('keydown', function(e) {
+        if (e.code === 'Space' && !e.repeat) {
+            e.preventDefault();
+            isSpacePressed = true;
+            gridWrapper.style.cursor = 'grab';
+        }
+    });
+
+    document.addEventListener('keyup', function(e) {
+        if (e.code === 'Space') {
+            isSpacePressed = false;
+            if (!isPanning) {
+                gridWrapper.style.cursor = '';
+            }
+        }
+    });
+
+    // 鼠标事件 - 使用捕获阶段确保优先处理
+    gridWrapper.addEventListener('mousedown', function(e) {
+        // 右键拖动 或 空格键+左键拖动
+        if (e.button === 2 || (e.button === 0 && isSpacePressed)) {
+            e.preventDefault();
+            e.stopPropagation();
+            isPanning = true;
+            panStartX = e.clientX;
+            panStartY = e.clientY;
+            panStartScrollLeft = gridWrapper.scrollLeft;
+            panStartScrollTop = gridWrapper.scrollTop;
+            gridWrapper.classList.add('panning');
+            gridWrapper.style.cursor = 'grabbing';
+
+            // 隐藏提示（如果存在）
+            const hintElement = document.getElementById('panHint');
+            if (hintElement) {
+                hintElement.style.opacity = '0';
+            }
+
+            return false; // 阻止事件进一步传播
+        }
+    }, true); // 使用捕获阶段
+
+    // 禁用右键菜单
+    gridWrapper.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    document.addEventListener('mousemove', function(e) {
+        if (!isPanning) return;
+
+        e.preventDefault();
+        e.stopPropagation(); // 防止与其他拖动功能冲突
+
+        const deltaX = e.clientX - panStartX;
+        const deltaY = e.clientY - panStartY;
+
+        gridWrapper.scrollLeft = panStartScrollLeft - deltaX;
+        gridWrapper.scrollTop = panStartScrollTop - deltaY;
+    });
+
+    document.addEventListener('mouseup', function() {
+        if (isPanning) {
+            isPanning = false;
+            gridWrapper.classList.remove('panning');
+            gridWrapper.style.cursor = isSpacePressed ? 'grab' : '';
+        }
+    });
+
+    // 触摸事件（移动端）
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchScrollLeft = 0;
+    let touchScrollTop = 0;
+    let isTouchPanning = false;
+
+    gridWrapper.addEventListener('touchstart', function(e) {
+        if (e.touches.length === 1) {
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            touchScrollLeft = gridWrapper.scrollLeft;
+            touchScrollTop = gridWrapper.scrollTop;
+
+            // 延迟启动触摸拖动以区分点击和拖动
+            setTimeout(() => {
+                if (e.touches.length === 1) {
+                    isTouchPanning = true;
+                }
+            }, 100);
+        }
+    }, { passive: true });
+
+    gridWrapper.addEventListener('touchmove', function(e) {
+        if (e.touches.length === 1 && isTouchPanning) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const deltaX = touch.clientX - touchStartX;
+            const deltaY = touch.clientY - touchStartY;
+
+            gridWrapper.scrollLeft = touchScrollLeft - deltaX;
+            gridWrapper.scrollTop = touchScrollTop - deltaY;
+        }
+    }, { passive: false });
+
+    gridWrapper.addEventListener('touchend', function() {
+        isTouchPanning = false;
+    });
+}
+
+// 更新座位统计
+function updateSeatStats() {
+    let totalSeats = 0;
+    let availableSeats = 0;
+    let lockedSeats = 0;
+    let specialSeats = 0;
+    let vipSeats = 0;
+    let disabledSeats = 0;
+
+    for (let row = 0; row < gridRows; row++) {
+        for (let col = 0; col < gridCols; col++) {
+            const cellData = seatGrid[row][col];
+            if (cellData.state !== 0 && cellData.state !== 2) { // 不是空位和通道
+                totalSeats++;
+                switch (cellData.type) {
+                    case 'available':
+                        availableSeats++;
+                        break;
+                    case 'locked':
+                        lockedSeats++;
+                        break;
+                    case 'special':
+                        specialSeats++;
+                        break;
+                    case 'vip':
+                        vipSeats++;
+                        break;
+                    case 'disabled':
+                        disabledSeats++;
+                        break;
+                }
+            }
+        }
+    }
+
+    // 更新显示
+    document.getElementById('totalSeats').textContent = totalSeats;
+    document.getElementById('availableSeats').textContent = availableSeats;
+    document.getElementById('lockedSeats').textContent = lockedSeats;
+    document.getElementById('specialSeats').textContent = specialSeats + vipSeats + disabledSeats;
+}
+
+// 更新座位网格
+function updateSeatGrid() {
+    const gridContainer = document.getElementById('seatGrid');
+    const gridWrapper = document.querySelector('.grid-wrapper');
+
+    // 根据网格大小智能调整单元格尺寸
+    const totalCells = gridRows * gridCols;
+    let adaptiveCellSize;
+
+    if (totalCells > 5000) {
+        // 大网格：使用较小的单元格
+        adaptiveCellSize = 20;
+    } else if (totalCells > 2000) {
+        // 中等网格：使用中等单元格
+        adaptiveCellSize = 25;
+    } else {
+        // 小网格：使用正常大小
+        adaptiveCellSize = 35;
+    }
+
+    cellSize = adaptiveCellSize;
+
+    gridContainer.innerHTML = '';
+    gridContainer.style.gridTemplateColumns = `repeat(${gridCols}, ${cellSize}px)`;
+    gridContainer.style.gridTemplateRows = `repeat(${gridRows}, ${cellSize}px)`;
+
+    // 大网格时添加性能优化提示
+    if (totalCells > 5000) {
+        console.log(`大网格模式: ${gridRows}x${gridCols} = ${totalCells}个单元格，已优化单元格大小为${cellSize}px`);
+    }
+
+    // 初始化座位网格数据
+    seatGrid = Array(gridRows).fill(null).map(() =>
+        Array(gridCols).fill(null).map(() => ({
+            state: 0, // 0: 空位, 1: 座位, 2: 通道
+            type: 'available' // 座位类型: available, locked, special, vip, disabled
+        }))
+    );
+
+    // 创建网格单元格
+    for (let row = 0; row < gridRows; row++) {
+        for (let col = 0; col < gridCols; col++) {
+            const cell = document.createElement('div');
+            cell.className = 'seat-cell';
+            cell.dataset.row = row;
+            cell.dataset.col = col;
+            cell.style.width = cellSize + 'px';
+            cell.style.height = cellSize + 'px';
+
+            // 点击切换座位状态
+            cell.addEventListener('click', function(e) {
+                if (!isDragging) {
+                    toggleSeat(row, col, this);
+                }
+            });
+
+            // 拖拽事件 - 只在左键且非空格键时处理
+            cell.addEventListener('mousedown', function(e) {
+                // 如果是右键或空格键+左键，不处理座位拖拽，让容器拖动生效
+                if (e.button === 2 || (e.button === 0 && isSpacePressed)) {
+                    return; // 让事件冒泡到容器处理
+                }
+
+                if (e.button === 0) { // 只处理左键
+                    e.preventDefault();
+                    e.stopPropagation();
+                    startDrag(row, col, this, e);
+                }
+            });
+
+            // mouseenter 事件现在由全局 mousemove 处理，移除重复逻辑
+
+            // mouseleave 事件处理已移除，由全局事件统一管理
+
+            gridContainer.appendChild(cell);
+        }
+    }
+
+    // 强制重新初始化拖动功能，确保大网格下正常工作
+    setTimeout(() => {
+        const gridWrapper = document.querySelector('.grid-wrapper');
+        if (gridWrapper) {
+            // 触发一个自定义事件来重新检查拖动状态
+            gridWrapper.dispatchEvent(new CustomEvent('gridUpdated'));
+
+            // 确保滚动条显示
+            if (gridWrapper.scrollWidth > gridWrapper.clientWidth ||
+                gridWrapper.scrollHeight > gridWrapper.clientHeight) {
+                gridWrapper.style.cursor = 'grab';
+            }
+        }
+    }, 100);
+}
+
+// 自适应大小功能
+function autoResizeSeatGrid() {
+    const gridWrapper = document.querySelector('.grid-wrapper');
+    const gridContainer = document.getElementById('seatGrid');
+    const autoResizeBtn = document.getElementById('autoResizeBtn');
+
+    if (!gridWrapper || !gridContainer) return;
+
+    // 添加加载状态
+    autoResizeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 调整中...';
+    autoResizeBtn.disabled = true;
+
+    // 延迟执行以确保容器尺寸正确
+    setTimeout(() => {
+        try {
+            // 获取容器的实际尺寸
+            const containerWidth = gridWrapper.clientWidth - 40;
+            const containerHeight = gridWrapper.clientHeight - 40;
+
+            // 计算最佳的单元格尺寸，根据网格大小智能调整
+            const totalCells = gridRows * gridCols;
+            let maxDisplayCols, maxDisplayRows, minCellSize, maxCellSize;
+
+            if (totalCells > 5000) {
+                // 大网格：显示更多，但单元格更小
+                maxDisplayCols = Math.min(gridCols, 20);
+                maxDisplayRows = Math.min(gridRows, 15);
+                minCellSize = 15;
+                maxCellSize = 25;
+            } else if (totalCells > 2000) {
+                // 中等网格
+                maxDisplayCols = Math.min(gridCols, 15);
+                maxDisplayRows = Math.min(gridRows, 12);
+                minCellSize = 20;
+                maxCellSize = 35;
+            } else {
+                // 小网格
+                maxDisplayCols = Math.min(gridCols, 12);
+                maxDisplayRows = Math.min(gridRows, 10);
+                minCellSize = 25;
+                maxCellSize = 45;
+            }
+
+            const optimalCellWidth = Math.floor(containerWidth / maxDisplayCols);
+            const optimalCellHeight = Math.floor(containerHeight / maxDisplayRows);
+            const optimalCellSize = Math.min(optimalCellWidth, optimalCellHeight);
+
+            // 设置合理的尺寸范围
+            cellSize = Math.max(Math.min(optimalCellSize, maxCellSize), minCellSize);
+
+            // 重新渲染网格
+            updateSeatGrid();
+
+            // 添加视觉反馈
+            gridContainer.style.transition = 'all 0.3s ease';
+            gridContainer.style.transform = 'scale(0.98)';
+
+            setTimeout(() => {
+                gridContainer.style.transform = 'scale(1)';
+                setTimeout(() => {
+                    gridContainer.style.transition = '';
+                }, 300);
+            }, 100);
+
+            console.log(`自适应调整完成: 单元格大小 ${cellSize}px, 网格 ${gridRows}x${gridCols}`);
+
+        } catch (error) {
+            console.error('自适应大小调整失败:', error);
+        } finally {
+            // 恢复按钮状态
+            autoResizeBtn.innerHTML = '<i class="fas fa-expand-arrows-alt"></i> 自适应大小';
+            autoResizeBtn.disabled = false;
+        }
+    }, 100);
+}
+
+// 处理全局鼠标移动（用于拖拽）
+function handleGlobalMouseMove(event) {
+    if (!isDragging) return;
+
+    // 防止默认行为
+    event.preventDefault();
+
+    // 获取鼠标位置下的元素
+    const elementUnderMouse = document.elementFromPoint(event.clientX, event.clientY);
+    if (!elementUnderMouse || !elementUnderMouse.classList.contains('seat-cell')) {
+        return;
+    }
+
+    // 获取该单元格的行列信息
+    const row = parseInt(elementUnderMouse.dataset.row);
+    const col = parseInt(elementUnderMouse.dataset.col);
+
+    if (isNaN(row) || isNaN(col) || row < 0 || row >= gridRows || col < 0 || col >= gridCols) return;
+
+    // 处理拖拽经过
+    handleDragOver(row, col, elementUnderMouse);
+}
+
+// 开始拖拽
+function startDrag(row, col, element, event) {
+    isDragging = true;
+    dragStartCell = { row, col };
+    draggedCells.clear();
+
+    // 确定拖拽模式：根据当前单元格状态
+    const currentState = seatGrid[row][col].state;
+    if (event.ctrlKey || event.metaKey) {
+        // 按住Ctrl/Cmd键为通道模式
+        dragMode = 'aisle';
+    } else if (currentState === 0) {
+        // 空位开始拖拽 -> 添加座位模式
+        dragMode = 'add';
+    } else {
+        // 座位开始拖拽 -> 删除座位模式
+        dragMode = 'remove';
+    }
+
+    // 处理起始单元格
+    handleDragOver(row, col, element);
+
+    // 添加拖拽样式
+    document.body.style.cursor = dragMode === 'add' ? 'copy' :
+                                 dragMode === 'remove' ? 'not-allowed' : 'crosshair';
+
+    // 显示拖拽提示
+    showDragHint();
+}
+
+// 处理拖拽经过的单元格
+function handleDragOver(row, col, element) {
+    if (!isDragging) return;
+
+    const cellKey = `${row}-${col}`;
+    if (draggedCells.has(cellKey)) return; // 避免重复处理
+
+    draggedCells.add(cellKey);
+
+    // 根据拖拽模式处理单元格
+    switch (dragMode) {
+        case 'add':
+            if (seatGrid[row][col].state === 0) {
+                setSeatState(row, col, element, 1, currentSeatType);
+                element.classList.add('drag-preview');
+            }
+            break;
+        case 'remove':
+            if (seatGrid[row][col].state === 1) {
+                setSeatState(row, col, element, 0);
+                element.classList.add('drag-preview');
+            }
+            break;
+        case 'aisle':
+            setSeatState(row, col, element, 2); // 2表示通道
+            element.classList.add('drag-preview');
+            break;
+    }
+}
+
+// 结束拖拽
+function endDrag() {
+    if (!isDragging) return;
+
+    isDragging = false;
+    dragMode = null;
+    dragStartCell = null;
+    draggedCells.clear();
+
+    // 恢复光标
+    document.body.style.cursor = '';
+
+    // 移除拖拽预览样式
+    const previewCells = document.querySelectorAll('.drag-preview');
+    previewCells.forEach(cell => cell.classList.remove('drag-preview'));
+
+    // 隐藏拖拽提示
+    hideDragHint();
+}
+
+// 设置座位状态（统一函数）
+function setSeatState(row, col, element, state, type = 'available') {
+    seatGrid[row][col].state = state;
+    if (state === 1) { // 只有座位状态才设置类型
+        seatGrid[row][col].type = type;
+    }
+
+    switch (state) {
+        case 0: // 空位
+            element.className = 'seat-cell';
+            element.innerHTML = '';
+            break;
+        case 1: // 座位
+            element.className = `seat-cell ${type}`;
+            element.innerHTML = '<i class="fas fa-chair"></i>';
+            break;
+        case 2: // 通道
+            element.className = 'seat-cell aisle';
+            element.innerHTML = '<i class="fas fa-walking"></i>';
+            break;
+    }
+
+    // 更新统计
+    updateSeatStats();
+}
+
+// 切换座位状态（保持原有功能）
+function toggleSeat(row, col, element) {
+    const currentState = seatGrid[row][col].state;
+    if (currentState === 0) {
+        // 空位 -> 当前选择的座位类型
+        setSeatState(row, col, element, 1, currentSeatType);
+    } else {
+        // 座位/通道 -> 空位
+        setSeatState(row, col, element, 0);
+    }
+}
+
+// 显示拖拽提示
+function showDragHint() {
+    let hintElement = document.getElementById('dragHint');
+    if (!hintElement) {
+        hintElement = document.createElement('div');
+        hintElement.id = 'dragHint';
+        hintElement.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 1000;
+            pointer-events: none;
+        `;
+        document.body.appendChild(hintElement);
+    }
+
+    const modeText = {
+        'add': '拖拽添加座位',
+        'remove': '拖拽删除座位',
+        'aisle': '拖拽添加通道 (Ctrl+拖拽)'
+    };
+
+    hintElement.textContent = modeText[dragMode] || '拖拽编辑';
+    hintElement.style.display = 'block';
+}
+
+// 隐藏拖拽提示
+function hideDragHint() {
+    const hintElement = document.getElementById('dragHint');
+    if (hintElement) {
+        hintElement.style.display = 'none';
+    }
+}
+
+// 网格尺寸控制
+function updateGridSize() {
+    const rowsInput = document.getElementById('gridRows');
+    const colsInput = document.getElementById('gridCols');
+
+    gridRows = parseInt(rowsInput.value) || 10;
+    gridCols = parseInt(colsInput.value) || 10;
+
+    updateSeatGrid();
+}
+
+// 设置圆桌
+function addRoundTable() {
+    const seats = parseInt(document.getElementById('roundTableSeats').value) || 8;
+    const tables = parseInt(document.getElementById('roundTableCount').value) || 1;
+
+    // 简单的圆桌排布逻辑 - 在网格中央区域放置
+    const centerRow = Math.floor(gridRows / 2);
+    const centerCol = Math.floor(gridCols / 2);
+
+    for (let t = 0; t < tables; t++) {
+        const tableRow = centerRow - 2 + Math.floor(t / 3) * 5;
+        const tableCol = centerCol - 4 + (t % 3) * 4;
+
+        // 围绕中心点放置座位
+        const radius = Math.ceil(seats / 8) + 1;
+        for (let s = 0; s < seats; s++) {
+            const angle = (2 * Math.PI * s) / seats;
+            const seatRow = Math.round(tableRow + radius * Math.sin(angle));
+            const seatCol = Math.round(tableCol + radius * Math.cos(angle));
+
+            if (seatRow >= 0 && seatRow < gridRows && seatCol >= 0 && seatCol < gridCols) {
+                const cell = document.querySelector(`[data-row="${seatRow}"][data-col="${seatCol}"]`);
+                if (cell) {
+                    setSeatState(seatRow, seatCol, cell, 1, currentSeatType);
+                }
+            }
+        }
+    }
+}
+
+// 设置条桌
+function addLongTable() {
+    const cols = parseInt(document.getElementById('longTableCols').value) || 3;
+    const rows = parseInt(document.getElementById('longTableRows').value) || 1;
+
+    // 在网格顶部区域放置条桌
+    const startRow = 1;
+    const seatsPerTable = cols * 2; // 条桌两侧都有座位
+
+    for (let r = 0; r < rows; r++) {
+        const tableRow = startRow + r * 3;
+        for (let c = 0; c < cols; c++) {
+            const tableCol = Math.floor((gridCols - cols * 3) / 2) + c * 3;
+
+            // 条桌两侧放置座位
+            if (tableRow - 1 >= 0 && tableCol >= 0 && tableCol < gridCols) {
+                const cell = document.querySelector(`[data-row="${tableRow - 1}"][data-col="${tableCol}"]`);
+                if (cell) {
+                    setSeatState(tableRow - 1, tableCol, cell, 1, currentSeatType);
+                }
+            }
+            if (tableRow + 1 < gridRows && tableCol >= 0 && tableCol < gridCols) {
+                const cell = document.querySelector(`[data-row="${tableRow + 1}"][data-col="${tableCol}"]`);
+                if (cell) {
+                    setSeatState(tableRow + 1, tableCol, cell, 1, currentSeatType);
+                }
+            }
+        }
+    }
+}
+
+// 清空所有座位
+function clearAllSeats() {
+    const cells = document.querySelectorAll('.seat-cell');
+    cells.forEach(cell => {
+        cell.className = 'seat-cell';
+        cell.innerHTML = '';
+    });
+
+    // 清空数据
+    seatGrid = Array(gridRows).fill(null).map(() =>
+        Array(gridCols).fill(null).map(() => ({
+            state: 0, // 0: 空位, 1: 座位, 2: 通道
+            type: 'available' // 座位类型: available, locked, special, vip, disabled
+        }))
+    );
+
+    // 更新统计
+    updateSeatStats();
+}
+
+// 关闭座位排布页面
+function closeSeatLayout() {
+    document.getElementById('seatLayoutModal').style.display = 'none';
+}
+
+// 保存座位排布
+function saveSeatLayout() {
+    // 这里可以将座位数据保存到表单或后端
+    console.log('座位排布数据:', seatGrid);
+    closeSeatLayout();
+}
+
+// 窗口大小改变时重新调整网格
+window.addEventListener('resize', function() {
+    if (document.getElementById('seatLayoutModal').style.display === 'flex') {
+        setTimeout(updateSeatGrid, 100);
+    }
+});
+</script>
+
+<!-- 座位排布弹出页面 -->
+<div id="seatLayoutModal" class="seat-layout-modal" style="display: none;">
+    <div class="seat-layout-container">
+        <div class="seat-layout-header">
+            <h2>座位排布系统</h2>
+            <div class="pan-controls-info">
+                <small style="color: #6b7280; font-size: 0.75rem;">
+                    <i class="fas fa-mouse"></i> 右键拖动画面 |
+                    <i class="fas fa-keyboard"></i> 空格+左键拖动 |
+                    <i class="fas fa-mobile-alt"></i> 触摸滑动
+                </small>
+            </div>
+            <button class="close-btn" onclick="closeSeatLayout()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="seat-layout-body">
+            <!-- 左侧控制面板 -->
+            <div class="seat-layout-sidebar">
+                <!-- 座位统计 -->
+                <div class="control-section">
+                    <h3>座位统计</h3>
+                    <div class="seat-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">总座位数:</span>
+                            <span id="totalSeats" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">可选座位:</span>
+                            <span id="availableSeats" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">锁定座位:</span>
+                            <span id="lockedSeats" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">特殊座位:</span>
+                            <span id="specialSeats" class="stat-value">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 座位类型选择 -->
+                <div class="control-section">
+                    <h3>座位类型</h3>
+                    <div class="seat-type-selector">
+                        <div class="seat-type-option active" data-type="available" data-color="#10b981">
+                            <div class="seat-type-preview" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);"></div>
+                            <span>可选座位</span>
+                        </div>
+                        <div class="seat-type-option" data-type="locked" data-color="#6b7280">
+                            <div class="seat-type-preview" style="background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);"></div>
+                            <span>锁定座位</span>
+                        </div>
+                        <div class="seat-type-option" data-type="special" data-color="#8b5cf6">
+                            <div class="seat-type-preview" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);"></div>
+                            <span>特殊座位</span>
+                        </div>
+                        <div class="seat-type-option" data-type="vip" data-color="#f59e0b">
+                            <div class="seat-type-preview" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);"></div>
+                            <span>VIP座位</span>
+                        </div>
+                        <div class="seat-type-option" data-type="disabled" data-color="#ef4444">
+                            <div class="seat-type-preview" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);"></div>
+                            <span>禁用座位</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <h3>网格设置</h3>
+                    <div class="control-group">
+                        <label>行数:</label>
+                        <input type="number" id="gridRows" value="10" min="5" max="20" onchange="updateGridSize()">
+                    </div>
+                    <div class="control-group">
+                        <label>列数:</label>
+                        <input type="number" id="gridCols" value="10" min="5" max="20" onchange="updateGridSize()">
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <h3>圆桌设置</h3>
+                    <div class="table-config">
+                        <div class="table-preview round-table">
+                            <span class="table-label">圆桌</span>
+                        </div>
+                        <div class="control-group">
+                            <label>位数/人:</label>
+                            <input type="number" id="roundTableSeats" value="8" min="4" max="12">
+                        </div>
+                        <div class="control-group">
+                            <label>圆桌数:</label>
+                            <input type="number" id="roundTableCount" value="1" min="1" max="5">
+                        </div>
+                        <button class="add-table-btn" onclick="addRoundTable()">
+                            <i class="fas fa-plus"></i> 添加圆桌
+                        </button>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <h3>条桌排列</h3>
+                    <div class="table-config">
+                        <div class="table-preview long-table">
+                            <span class="table-label">条桌</span>
+                        </div>
+                        <div class="control-group">
+                            <label>列数:</label>
+                            <input type="number" id="longTableCols" value="3" min="1" max="6">
+                        </div>
+                        <div class="control-group">
+                            <label>行数:</label>
+                            <input type="number" id="longTableRows" value="1" min="1" max="3">
+                        </div>
+                        <button class="add-table-btn" onclick="addLongTable()">
+                            <i class="fas fa-plus"></i> 添加条桌
+                        </button>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <button class="clear-btn" onclick="clearAllSeats()">
+                        <i class="fas fa-trash"></i> 清空座位
+                    </button>
+                </div>
+            </div>
+
+            <!-- 右侧座位网格 -->
+            <div class="seat-layout-main">
+                <div class="layout-controls">
+                    <button id="autoResizeBtn" class="control-btn" title="支持现场配置布局放大/缩小">
+                        <i class="fas fa-expand-arrows-alt"></i> 自适应大小
+                    </button>
+                </div>
+
+                <div class="grid-wrapper">
+                    <div id="seatGrid" class="seat-grid"></div>
+                </div>
+
+                <div class="seat-legend">
+                    <div class="legend-item">
+                        <div class="legend-color empty"></div>
+                        <span>空位</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color available"></div>
+                        <span>可选座位</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color locked"></div>
+                        <span>锁定座位</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color special"></div>
+                        <span>特殊座位</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color vip"></div>
+                        <span>VIP座位</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color disabled"></div>
+                        <span>禁用座位</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color aisle"></div>
+                        <span>通道</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1rem; padding: 1rem; background: #e0f2fe; border-radius: 8px; font-size: 0.9rem; color: #0369a1;">
+                    <div style="font-weight: 600; margin-bottom: 0.5rem;">📖 拖拽编辑说明：</div>
+                    <div>• <strong>普通拖拽</strong>：从空位开始拖拽可批量添加座位，从座位开始拖拽可批量删除座位</div>
+                    <div>• <strong>Ctrl+拖拽</strong>：按住Ctrl键拖拽可添加通道（用于过道规划）</div>
+                    <div>• <strong>单击</strong>：单击空位/座位可切换状态</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="seat-layout-footer">
+            <button class="cancel-btn" onclick="closeSeatLayout()">取消</button>
+            <button class="save-btn" onclick="saveSeatLayout()">
+                <i class="fas fa-save"></i> 规划图上传
+            </button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

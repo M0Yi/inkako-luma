@@ -1,0 +1,85 @@
+{% extends "layout/master.html" %}
+
+{# 着陆页布局 - 透明导航，全屏设计 #}
+
+{% block navigation %}
+<nav class="fixed top-0 w-full z-50 bg-transparent backdrop-blur-none border-b-0">
+    <div class="container-custom">
+        <div class="flex justify-between items-center h-16">
+            <!-- Logo -->
+            <div class="flex items-center">
+                <a href="/" class="flex items-center space-x-2 text-white hover:text-luma-200 transition-colors">
+                    <i class="fas fa-calendar-star text-xl"></i>
+                    <span class="text-xl font-bold">Luma</span>
+                </a>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center space-x-8">
+                <!-- <a href="/events" class="text-white/80 hover:text-white font-medium transition-colors">
+                    发现活动
+                </a> -->
+                <!-- <a href="/about" class="text-white/80 hover:text-white font-medium transition-colors">
+                    关于我们
+                </a> -->
+                <a href="/management" class="text-white/80 hover:text-white font-medium transition-colors">
+                    活动管理
+                </a>
+                <a href="/login" class="text-white/80 hover:text-white font-medium transition-colors">
+                    登录
+                </a>
+                <a href="/register" class="text-white/80 hover:text-white font-medium transition-colors">
+                    报名活动
+                </a>
+                <a href="/create" class="bg-white text-luma-500 px-6 py-2 rounded-full font-medium hover-lift">
+                    创建活动
+                </a>
+            </div>
+
+            <!-- Mobile menu button -->
+            <div class="md:hidden">
+                <button type="button" class="text-white hover:text-luma-200 transition-colors" id="mobile-menu-button">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div class="md:hidden hidden" id="mobile-menu">
+        <div class="px-4 pt-2 pb-3 space-y-1 bg-black/50 backdrop-blur-xl border-t border-white/20">
+            <!-- <a href="/events" class="block px-3 py-2 text-white/80 hover:text-white font-medium">
+                发现活动
+            </a>
+            <a href="/about" class="block px-3 py-2 text-white/80 hover:text-white font-medium">
+                关于我们
+            </a> -->
+            <a href="/management" class="block px-3 py-2 text-white/80 hover:text-white font-medium">
+                活动管理
+            </a>
+            <a href="/login" class="block px-3 py-2 text-white/80 hover:text-white font-medium">
+                登录
+            </a>
+            <a href="/register" class="block px-3 py-2 text-white/80 hover:text-white font-medium">
+                注册
+            </a>
+            <a href="/create" class="block mx-3 mt-4 bg-white text-luma-500 px-4 py-2 rounded-full font-medium text-center">
+                创建活动
+            </a>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block main_class %}{% endblock %}
+
+{% block footer %}
+<!-- 透明页脚，用于着陆页 -->
+<footer class="absolute bottom-0 left-0 right-0 text-white/60 py-3 z-30 pointer-events-none">
+    <div class="container-custom">
+        <div class="text-center text-xs">
+            <p>&copy; {{ "now"|date("Y") }} Luma. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "layout/master.html" %}
+
+{# 标准页面布局 - 继承所有资源，无重复加载 #}
+
+{% block navigation %}
+    {{ parent() }}
+{% endblock %}
+
+{% block main_class %}pt-16{% endblock %}
+
+{% block footer %}
+    {{ parent() }}
+{% endblock %}

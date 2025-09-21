@@ -1,0 +1,1523 @@
+{% extends "layout/landing.html" %}
+
+{% block title %}报名参加 - {{ event.title }} - Luma{% endblock %}
+
+{% block content %}
+<!-- Fullscreen Registration Section -->
+<section class="register-section">
+    <div class="register-container">
+        <!-- 活动信息卡片 -->
+        <div class="event-info-card">
+            <div class="event-cover" style="background-image: url('{{ event.cover_image or "/static/images/default-event.jpg" }}');">
+                <div class="event-overlay">
+                    <div class="event-badge">
+                        <i class="fas fa-calendar-alt"></i>
+                        活动报名
+                    </div>
+                </div>
+            </div>
+
+            <div class="event-details">
+                <h1 class="event-title">{{ event.title }}</h1>
+
+                <div class="event-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <div class="meta-content">
+                            <span class="meta-label">活动时间</span>
+                            <span class="meta-value">{{ event.start_date }} {{ event.start_time }} - {{ event.end_date }} {{ event.end_time }}</span>
+                        </div>
+                    </div>
+
+                    {% if event.location %}
+                    <div class="meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div class="meta-content">
+                            <span class="meta-label">活动地点</span>
+                            <span class="meta-value">{{ event.location }}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if event.max_capacity %}
+                    <div class="meta-item">
+                        <i class="fas fa-users"></i>
+                        <div class="meta-content">
+                            <span class="meta-label">人数限制</span>
+                            <span class="meta-value">{{ event.registered_count }}/{{ event.max_capacity }} 人</span>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="meta-item">
+                        <i class="fas fa-ticket-alt"></i>
+                        <div class="meta-content">
+                            <span class="meta-label">门票价格</span>
+                            <span class="meta-value free-tag">免费</span>
+                        </div>
+                    </div>
+                </div>
+
+                {% if event.description %}
+                <div class="event-description">
+                    <h3>活动介绍</h3>
+                    <p>{{ event.description }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 报名表单区域 -->
+        <div class="registration-form-wrapper">
+            <div class="form-header">
+                <h2>
+                    <i class="fas fa-user-plus"></i>
+                    报名参加此活动
+                </h2>
+                <p class="form-subtitle">请填写您的基本信息完成报名</p>
+            </div>
+
+            <form class="registration-form" action="/luma/register-submit" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="event_id" value="{{ event.id }}">
+                <!-- 基本信息 -->
+                <div class="form-section">
+                    <h3 class="section-title">基本信息</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name" class="form-label">
+                                <i class="fas fa-user"></i>
+                                姓名 <span class="required">*</span>
+                            </label>
+                            <input type="text" id="name" name="name" class="form-input" placeholder="请输入您的真实姓名" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="form-label">
+                                <i class="fas fa-envelope"></i>
+                                邮箱 <span class="required">*</span>
+                            </label>
+                            <input type="email" id="email" name="email" class="form-input" placeholder="请输入邮箱地址" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone" class="form-label">
+                                <i class="fas fa-phone"></i>
+                                手机号 <span class="required">*</span>
+                            </label>
+                            <input type="tel" id="phone" name="phone" class="form-input" placeholder="请输入手机号码" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="company" class="form-label">
+                                <i class="fas fa-building"></i>
+                                公司/组织
+                            </label>
+                            <input type="text" id="company" name="company" class="form-input" placeholder="请输入公司或组织名称">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="title" class="form-label">
+                            <i class="fas fa-briefcase"></i>
+                            职位/身份
+                        </label>
+                        <input type="text" id="title" name="title" class="form-input" placeholder="请输入您的职位或身份">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes" class="form-label">
+                            <i class="fas fa-comment"></i>
+                            备注信息
+                        </label>
+                        <textarea id="notes" name="notes" class="form-textarea" placeholder="如有特殊需求或想对主办方说的话，请在此填写..." rows="4"></textarea>
+                    </div>
+                </div>
+
+                <!-- 座位选择（如果启用了座位排布） -->
+                {% if event.seat_layout %}
+                <div class="form-section">
+                    <h3 class="section-title">选择座位</h3>
+                    <div class="seat-selection-area">
+                        <div class="seat-map-container">
+                            <div id="eventSeatMap" class="event-seat-map">
+                                <!-- 座位图将通过JavaScript动态生成 -->
+                            </div>
+
+                            <div class="seat-legend">
+                                <div class="legend-item">
+                                    <div class="legend-color available"></div>
+                                    <span>可选座位</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color selected"></div>
+                                    <span>已选座位</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color occupied"></div>
+                                    <span>已被占用</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color special"></div>
+                                    <span>特殊座位</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color aisle"></div>
+                                    <span>过道</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="selected-seat-info">
+                            <div class="info-card">
+                                <h4>您选择的座位</h4>
+                                <div id="selectedSeatDisplay" class="selected-seat-display">
+                                    <div class="no-seat-selected">
+                                        <i class="fas fa-chair"></i>
+                                        <span>请在座位图中选择您的座位</span>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="selectedSeatId" name="seat_id" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- 个人资料图片上传 -->
+                <div class="form-section">
+                    <h3 class="section-title">个人头像（可选）</h3>
+                    <div class="avatar-upload-section">
+                        <div class="avatar-upload-card">
+                            <div class="avatar-preview" id="avatarPreview">
+                                <div class="avatar-placeholder">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span>点击上传头像</span>
+                                </div>
+                                <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display: none;">
+                            </div>
+                        </div>
+                        <div class="upload-hint">
+                            <small class="hint-text">支持 JPG、PNG 格式，文件大小不超过 2MB</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 隐私政策和服务条款 -->
+                <div class="form-section">
+                    <div class="agreement-section">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" id="agreeTerms" name="agree_terms" required>
+                            <span class="checkmark"></span>
+                            <span class="checkbox-text">
+                                我已阅读并同意 <a href="/privacy" target="_blank" class="link">隐私政策</a> 和 <a href="/terms" target="_blank" class="link">服务条款</a>
+                                <span class="required">*</span>
+                            </span>
+                        </label>
+
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" id="receiveUpdates" name="receive_updates">
+                            <span class="checkmark"></span>
+                            <span class="checkbox-text">
+                                我希望接收活动更新和相关通知
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 提交按钮 -->
+                <div class="form-actions">
+                    <button type="button" class="back-btn" onclick="history.back()">
+                        <i class="fas fa-arrow-left"></i>
+                        返回
+                    </button>
+                    <button type="submit" class="register-btn">
+                        <i class="fas fa-check-circle"></i>
+                        立即报名
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- 报名成功提示 -->
+<div id="successModal" class="success-modal" style="display: none;">
+    <div class="success-content">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h2>报名成功！</h2>
+        <p>您已成功报名参加此活动，我们将通过邮件和短信向您发送确认信息。</p>
+        <div class="success-actions">
+            <button class="btn-secondary" onclick="closeSuccessModal()">关闭</button>
+            <button class="btn-primary" onclick="viewMyRegistrations()">查看我的报名</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+/* 报名页面样式 */
+.register-section {
+    position: relative;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+    padding: 6rem 0 4rem 0;
+}
+
+.register-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.05"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.05"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.08"/><circle cx="20" cy="80" r="0.5" fill="white" opacity="0.08"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    pointer-events: none;
+}
+
+.register-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 3rem;
+}
+
+/* 活动信息卡片 */
+.event-info-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    height: fit-content;
+    position: sticky;
+    top: 2rem;
+    animation: fadeInLeft 0.8s ease-out;
+}
+
+.event-cover {
+    width: 100%;
+    height: 240px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.event-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1));
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 1rem;
+}
+
+.event-badge {
+    background: rgba(255, 255, 255, 0.9);
+    color: #374151;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    backdrop-filter: blur(10px);
+}
+
+.event-details {
+    padding: 2rem;
+}
+
+.event-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+}
+
+.event-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.meta-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.meta-item i {
+    color: #6366f1;
+    font-size: 1rem;
+    margin-top: 0.125rem;
+    flex-shrink: 0;
+}
+
+.meta-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.meta-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.meta-value {
+    font-size: 0.95rem;
+    color: #374151;
+    font-weight: 600;
+}
+
+.free-tag {
+    background: #d1fae5;
+    color: #065f46;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.event-description {
+    padding-top: 1.5rem;
+    border-top: 2px solid #e2e8f0;
+}
+
+.event-description h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.75rem;
+}
+
+.event-description p {
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+/* 报名表单区域 */
+.registration-form-wrapper {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 3rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: fadeInRight 0.8s ease-out;
+}
+
+.form-header {
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+.form-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.form-header h2 i {
+    color: #6366f1;
+}
+
+.form-subtitle {
+    color: #6b7280;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* 表单样式 */
+.form-section {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.form-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-label i {
+    color: #6366f1;
+    font-size: 0.875rem;
+}
+
+.required {
+    color: #ef4444;
+    font-weight: 700;
+}
+
+.form-input, .form-textarea {
+    padding: 0.875rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    background: white;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.form-input:focus, .form-textarea:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* 头像上传 */
+.avatar-upload-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+.avatar-upload-card {
+    flex-shrink: 0;
+}
+
+.avatar-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+    overflow: hidden;
+}
+
+.avatar-preview:hover {
+    border-color: #6366f1;
+    transform: scale(1.05);
+}
+
+.avatar-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6b7280;
+    text-align: center;
+}
+
+.avatar-placeholder i {
+    font-size: 2.5rem;
+}
+
+.avatar-placeholder span {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.upload-hint {
+    display: flex;
+    align-items: center;
+    padding-top: 1rem;
+}
+
+.hint-text {
+    font-size: 0.8rem;
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* 座位选择 */
+.seat-selection-area {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+}
+
+.seat-map-container {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 2rem;
+    border: 2px solid #e2e8f0;
+}
+
+.event-seat-map {
+    display: grid;
+    gap: 4px;
+    background: #f3f4f6;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    min-height: 300px;
+    place-items: center;
+}
+
+.seat-cell {
+    background: white;
+    border: 2px solid #d1d5db;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-size: 0.75rem;
+    color: #6b7280;
+    position: relative;
+}
+
+.seat-cell:hover {
+    transform: scale(1.1);
+    z-index: 10;
+}
+
+.seat-cell.available {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border-color: #059669;
+}
+
+.seat-cell.available:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.seat-cell.occupied {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color: white;
+    border-color: #4b5563;
+    cursor: not-allowed;
+}
+
+.seat-cell.selected {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border-color: #d97706;
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+}
+
+.seat-cell.special {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+    border-color: #7c3aed;
+}
+
+.seat-cell.aisle {
+    background: #e5e7eb;
+    color: #9ca3af;
+    border-color: #d1d5db;
+    cursor: default;
+}
+
+.seat-legend {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.legend-color {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1px solid #d1d5db;
+}
+
+.legend-color.available {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.legend-color.selected {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.legend-color.occupied {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+}
+
+.legend-color.special {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.legend-color.aisle {
+    background: #e5e7eb;
+}
+
+.selected-seat-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.info-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 2px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.info-card h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.selected-seat-display {
+    text-align: center;
+}
+
+.no-seat-selected {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    color: #6b7280;
+    padding: 2rem 1rem;
+}
+
+.no-seat-selected i {
+    font-size: 2.5rem;
+    opacity: 0.5;
+}
+
+.selected-seat-info-display {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.seat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.seat-type {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* 同意条款 */
+.agreement-section {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 2px solid #e2e8f0;
+}
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+}
+
+.checkbox-wrapper:last-child {
+    margin-bottom: 0;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    background: white;
+    border: 2px solid #d1d5db;
+    border-radius: 4px;
+    position: relative;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked + .checkmark {
+    background: #6366f1;
+    border-color: #6366f1;
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked + .checkmark::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.checkbox-text {
+    font-size: 0.95rem;
+    color: #374151;
+    line-height: 1.5;
+}
+
+.link {
+    color: #6366f1;
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.link:hover {
+    color: #4f46e5;
+}
+
+/* 表单操作按钮 */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 2rem;
+    border-top: 2px solid #e2e8f0;
+    gap: 1rem;
+}
+
+.back-btn {
+    background: white;
+    color: #6b7280;
+    border: 2px solid #e2e8f0;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.back-btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #475569;
+}
+
+.register-btn {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    border: none;
+    padding: 1.25rem 3rem;
+    border-radius: 12px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+}
+
+.register-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
+}
+
+.register-btn:active {
+    transform: translateY(0);
+}
+
+.register-btn:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* 成功提示模态框 */
+.success-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.success-content {
+    background: white;
+    padding: 3rem;
+    border-radius: 24px;
+    text-align: center;
+    max-width: 500px;
+    margin: 2rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: successModalIn 0.5s ease-out;
+}
+
+.success-icon {
+    font-size: 4rem;
+    color: #10b981;
+    margin-bottom: 1.5rem;
+}
+
+.success-content h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.success-content p {
+    color: #6b7280;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.success-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.btn-secondary, .btn-primary {
+    padding: 0.875rem 2rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-secondary {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.btn-secondary:hover {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+}
+
+/* 动画 */
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes successModalIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+    .register-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .event-info-card {
+        position: static;
+    }
+
+    .seat-selection-area {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .selected-seat-info {
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .register-container {
+        padding: 0 1rem;
+    }
+
+    .registration-form-wrapper {
+        padding: 2rem;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .avatar-upload-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .form-actions .back-btn,
+    .form-actions .register-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .seat-legend {
+        gap: 1rem;
+    }
+
+    .legend-item {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .event-details {
+        padding: 1.5rem;
+    }
+
+    .event-title {
+        font-size: 1.5rem;
+    }
+
+    .form-header h2 {
+        font-size: 1.5rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .registration-form-wrapper {
+        padding: 1.5rem;
+    }
+}
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 页面加载动画
+    const animateElements = document.querySelectorAll('.event-info-card, .registration-form-wrapper');
+    animateElements.forEach((element, index) => {
+        element.style.opacity = '0';
+        element.style.transform = index === 0 ? 'translateX(-30px)' : 'translateX(30px)';
+
+        setTimeout(() => {
+            element.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+            element.style.opacity = '1';
+            element.style.transform = 'translateX(0)';
+        }, index * 200);
+    });
+
+    // 头像上传预览
+    const avatarPreview = document.getElementById('avatarPreview');
+    const avatarInput = document.getElementById('avatarInput');
+
+    if (avatarPreview && avatarInput) {
+        avatarPreview.addEventListener('click', () => {
+            avatarInput.click();
+        });
+
+        avatarInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarPreview.style.backgroundImage = `url(${e.target.result})`;
+                    avatarPreview.style.backgroundSize = 'cover';
+                    avatarPreview.style.backgroundPosition = 'center';
+                    avatarPreview.querySelector('.avatar-placeholder').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // 座位选择功能初始化
+    const seatMapContainer = document.getElementById('eventSeatMap');
+    if (seatMapContainer) {
+        initEventSeatMap();
+    }
+
+    // 表单提交处理
+    const registerForm = document.querySelector('.registration-form');
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleRegistration(this);
+        });
+    }
+
+    // 表单验证
+    setupFormValidation();
+});
+
+// 初始化活动座位图
+function initEventSeatMap() {
+    // 模拟座位数据 - 实际应用中应该从后端获取
+    const seatData = {
+        rows: 8,
+        cols: 10,
+        seats: [
+            // 示例座位数据格式：{row, col, status, type, id}
+            // status: 'available', 'occupied', 'selected'
+            // type: 'regular', 'vip', 'special'
+        ]
+    };
+
+    // 生成座位布局
+    generateSeatLayout(seatData);
+}
+
+// 生成座位布局
+function generateSeatLayout(seatData) {
+    const seatMap = document.getElementById('eventSeatMap');
+    const { rows, cols } = seatData;
+
+    seatMap.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    seatMap.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+
+    // 清空现有内容
+    seatMap.innerHTML = '';
+
+    // 创建座位
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+            const seat = createSeatElement(row, col, seatData);
+            seatMap.appendChild(seat);
+        }
+    }
+}
+
+// 创建座位元素
+function createSeatElement(row, col, seatData) {
+    const seat = document.createElement('div');
+    const seatId = `seat-${row}-${col}`;
+
+    // 模拟座位状态 - 实际应用中根据后端数据设置
+    let status = 'available';
+    let type = 'regular';
+
+    // 模拟一些已占用和特殊座位
+    if (Math.random() < 0.2) {
+        status = 'occupied';
+    } else if (Math.random() < 0.1) {
+        type = 'vip';
+    } else if (Math.random() < 0.05) {
+        type = 'special';
+    }
+
+    // 模拟过道
+    if (col === Math.floor(cols / 2)) {
+        seat.className = 'seat-cell aisle';
+        seat.innerHTML = '<i class="fas fa-walking"></i>';
+        return seat;
+    }
+
+    seat.className = `seat-cell ${status} ${type}`;
+    seat.dataset.seatId = seatId;
+    seat.dataset.row = row;
+    seat.dataset.col = col;
+    seat.dataset.status = status;
+    seat.dataset.type = type;
+
+    // 座位图标
+    if (type === 'vip') {
+        seat.innerHTML = '<i class="fas fa-crown"></i>';
+    } else if (type === 'special') {
+        seat.innerHTML = '<i class="fas fa-star"></i>';
+    } else {
+        seat.innerHTML = '<i class="fas fa-chair"></i>';
+    }
+
+    // 添加点击事件（仅可选座位）
+    if (status === 'available') {
+        seat.addEventListener('click', function() {
+            selectSeat(this);
+        });
+    }
+
+    return seat;
+}
+
+// 选择座位
+function selectSeat(seatElement) {
+    // 清除之前选择的座位
+    const previousSelected = document.querySelector('.seat-cell.selected');
+    if (previousSelected) {
+        previousSelected.classList.remove('selected');
+        previousSelected.classList.add('available');
+    }
+
+    // 选择当前座位
+    seatElement.classList.remove('available');
+    seatElement.classList.add('selected');
+
+    // 更新选择座位信息显示
+    updateSelectedSeatDisplay(seatElement);
+
+    // 更新隐藏表单字段
+    const seatIdInput = document.getElementById('selectedSeatId');
+    if (seatIdInput) {
+        seatIdInput.value = seatElement.dataset.seatId;
+    }
+}
+
+// 更新选择座位显示
+function updateSelectedSeatDisplay(seatElement) {
+    const selectedSeatDisplay = document.getElementById('selectedSeatDisplay');
+    if (!selectedSeatDisplay) return;
+
+    const row = parseInt(seatElement.dataset.row) + 1; // 显示时从1开始
+    const col = parseInt(seatElement.dataset.col) + 1;
+    const type = seatElement.dataset.type;
+
+    const typeNames = {
+        'regular': '普通座位',
+        'vip': 'VIP座位',
+        'special': '特殊座位'
+    };
+
+    selectedSeatDisplay.innerHTML = `
+        <div class="selected-seat-info-display">
+            <div class="seat-number">第${row}排 ${col}座</div>
+            <div class="seat-type">${typeNames[type] || '普通座位'}</div>
+        </div>
+    `;
+}
+
+// 设置表单验证
+function setupFormValidation() {
+    const form = document.querySelector('.registration-form');
+    const inputs = form.querySelectorAll('input[required], textarea[required]');
+
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            validateField(this);
+        });
+
+        input.addEventListener('input', function() {
+            clearFieldError(this);
+        });
+    });
+}
+
+// 验证字段
+function validateField(field) {
+    const value = field.value.trim();
+    let isValid = true;
+    let errorMessage = '';
+
+    // 检查必填字段
+    if (field.hasAttribute('required') && !value) {
+        isValid = false;
+        errorMessage = '此字段为必填项';
+    }
+
+    // 特定字段验证
+    if (value && field.type === 'email') {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+            isValid = false;
+            errorMessage = '请输入有效的邮箱地址';
+        }
+    }
+
+    if (value && field.type === 'tel') {
+        const phoneRegex = /^1[3-9]\d{9}$/;
+        if (!phoneRegex.test(value)) {
+            isValid = false;
+            errorMessage = '请输入有效的手机号码';
+        }
+    }
+
+    // 显示或清除错误
+    if (!isValid) {
+        showFieldError(field, errorMessage);
+    } else {
+        clearFieldError(field);
+    }
+
+    return isValid;
+}
+
+// 显示字段错误
+function showFieldError(field, message) {
+    clearFieldError(field);
+
+    const errorElement = document.createElement('div');
+    errorElement.className = 'field-error';
+    errorElement.textContent = message;
+    errorElement.style.cssText = `
+        color: #ef4444;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        font-weight: 500;
+    `;
+
+    field.style.borderColor = '#ef4444';
+    field.parentNode.appendChild(errorElement);
+}
+
+// 清除字段错误
+function clearFieldError(field) {
+    const existingError = field.parentNode.querySelector('.field-error');
+    if (existingError) {
+        existingError.remove();
+    }
+    field.style.borderColor = '#e2e8f0';
+}
+
+// 处理报名提交
+function handleRegistration(form) {
+    // 验证所有必填字段
+    const requiredFields = form.querySelectorAll('input[required], textarea[required]');
+    let isValid = true;
+
+    requiredFields.forEach(field => {
+        if (!validateField(field)) {
+            isValid = false;
+        }
+    });
+
+    // 检查是否同意条款
+    const agreeTerms = document.getElementById('agreeTerms');
+    if (!agreeTerms.checked) {
+        isValid = false;
+        alert('请阅读并同意隐私政策和服务条款');
+        agreeTerms.focus();
+        return;
+    }
+
+    // 如果启用座位选择，检查是否已选择座位
+    const seatIdInput = document.getElementById('selectedSeatId');
+    if (seatIdInput && !seatIdInput.value) {
+        isValid = false;
+        alert('请选择您的座位');
+        document.getElementById('eventSeatMap').scrollIntoView({ behavior: 'smooth' });
+        return;
+    }
+
+    if (!isValid) {
+        alert('请检查并完善表单信息');
+        return;
+    }
+
+    // 显示提交状态
+    const submitBtn = form.querySelector('.register-btn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在提交...';
+    submitBtn.disabled = true;
+
+    // 收集表单数据
+    const formData = new FormData(form);
+
+    // 发送AJAX请求
+    fetch('/luma/register-submit', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        // 重置按钮状态
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+
+        if (data.success) {
+            // 显示成功提示
+            showSuccessModal();
+            console.log('报名成功:', data);
+        } else {
+            // 显示错误信息
+            alert(data.message || '报名失败，请稍后重试');
+            if (data.errors && data.errors.length > 0) {
+                console.error('验证错误:', data.errors);
+            }
+        }
+    })
+    .catch(error => {
+        // 重置按钮状态
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+
+        console.error('请求失败:', error);
+        alert('网络错误，请检查网络连接后重试');
+    });
+}
+
+// 显示成功模态框
+function showSuccessModal() {
+    const modal = document.getElementById('successModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        // 禁止背景滚动
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+// 关闭成功模态框
+function closeSuccessModal() {
+    const modal = document.getElementById('successModal');
+    if (modal) {
+        modal.style.display = 'none';
+        // 恢复背景滚动
+        document.body.style.overflow = '';
+    }
+}
+
+// 查看我的报名
+function viewMyRegistrations() {
+    closeSuccessModal();
+    // 跳转到用户报名列表页面
+    window.location.href = '/my-registrations';
+}
+
+// 窗口大小改变时重新调整座位图
+window.addEventListener('resize', function() {
+    const seatMap = document.getElementById('eventSeatMap');
+    if (seatMap && seatMap.children.length > 0) {
+        // 重新计算座位大小
+        adjustSeatMapSize();
+    }
+});
+
+// 调整座位图大小
+function adjustSeatMapSize() {
+    const seatMap = document.getElementById('eventSeatMap');
+    const container = seatMap.parentElement;
+
+    if (!seatMap || !container) return;
+
+    const containerWidth = container.clientWidth - 32; // 减去padding
+    const containerHeight = Math.min(container.clientHeight - 100, 400); // 限制最大高度
+
+    const cols = getComputedStyle(seatMap).gridTemplateColumns.split(' ').length;
+    const rows = getComputedStyle(seatMap).gridTemplateRows.split(' ').length;
+
+    const cellWidth = Math.floor(containerWidth / cols);
+    const cellHeight = Math.floor(containerHeight / rows);
+    const cellSize = Math.min(cellWidth, cellHeight, 40); // 最大40px
+
+    seatMap.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
+    seatMap.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
+
+    // 更新所有座位元素大小
+    const seats = seatMap.querySelectorAll('.seat-cell');
+    seats.forEach(seat => {
+        seat.style.width = `${cellSize}px`;
+        seat.style.height = `${cellSize}px`;
+        seat.style.fontSize = `${Math.max(cellSize * 0.4, 10)}px`;
+    });
+}
+
+// 初次加载时调整大小
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(adjustSeatMapSize, 100);
+});
+</script>
+{% endblock %}

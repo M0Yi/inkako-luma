@@ -1,0 +1,1965 @@
+{% extends "layout/landing.html" %}
+
+{% block title %}报名管理 - Luma{% endblock %}
+
+{% block content %}
+<!-- 报名管理页面 -->
+<section class="management-section">
+    <div class="management-container">
+        <!-- 页面标题 -->
+        <div class="page-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="page-title">
+                        <i class="fas fa-users-cog"></i>
+                        报名管理系统
+                    </h1>
+                    <div class="page-subtitle">活动：产品发布会 2024</div>
+                    <div class="event-meta">
+                        <span class="meta-item">
+                            <i class="fas fa-calendar"></i>
+                            2024年12月15日 14:00
+                        </span>
+                        <span class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            上海国际会议中心
+                        </span>
+                        <span class="meta-item">
+                            <i class="fas fa-users"></i>
+                            已报名 <span id="totalRegistered">48</span>/100 人
+                        </span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="export-btn">
+                        <i class="fas fa-download"></i>
+                        导出名单
+                    </button>
+                    <button class="settings-btn">
+                        <i class="fas fa-cog"></i>
+                        设置
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <div class="management-content">
+            <!-- 左侧：座位分配系统 -->
+            <div class="seat-assignment-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">
+                        <i class="fas fa-chair"></i>
+                        座位分配系统
+                    </h2>
+                    <div class="panel-actions">
+                        <button class="view-toggle active" data-view="seat">座位视图</button>
+                        <button class="view-toggle" data-view="list">列表视图</button>
+                    </div>
+                </div>
+
+                <div class="panel-content">
+                    <!-- 座位统计 -->
+                    <div class="seat-stats-bar">
+                        <div class="stat-box">
+                            <span class="stat-number" id="totalSeats">100</span>
+                            <span class="stat-label">总座位</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-number" id="assignedSeats">48</span>
+                            <span class="stat-label">已分配</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-number" id="availableSeats">52</span>
+                            <span class="stat-label">可用</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-number" id="reservedSeats">8</span>
+                            <span class="stat-label">预留</span>
+                        </div>
+                    </div>
+
+                    <!-- 座位网格视图 -->
+                    <div id="seatView" class="seat-view">
+                        <div class="seat-controls">
+                            <button class="control-btn" onclick="autoAssignSeats()">
+                                <i class="fas fa-magic"></i>
+                                自动分配
+                            </button>
+                            <button class="control-btn" onclick="clearAssignments()">
+                                <i class="fas fa-undo"></i>
+                                清空分配
+                            </button>
+                            <button class="control-btn" onclick="showSeatLayout()">
+                                <i class="fas fa-expand"></i>
+                                全屏管理
+                            </button>
+                        </div>
+
+                        <div class="seat-grid-container">
+                            <div class="stage-area">
+                                <div class="stage">
+                                    <i class="fas fa-tv"></i>
+                                    主舞台
+                                </div>
+                            </div>
+
+                            <div id="managementSeatGrid" class="management-seat-grid">
+                                <!-- 座位网格将通过JavaScript动态生成 -->
+                            </div>
+
+                            <div class="seat-legend">
+                                <div class="legend-item">
+                                    <div class="legend-color available"></div>
+                                    <span>可用</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color assigned"></div>
+                                    <span>已分配</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color vip"></div>
+                                    <span>VIP</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color reserved"></div>
+                                    <span>预留</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color disabled"></div>
+                                    <span>不可用</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 列表视图 -->
+                    <div id="listView" class="list-view" style="display: none;">
+                        <div class="seat-list-container">
+                            <div class="list-header">
+                                <div class="search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" placeholder="搜索座位号或参与者..." id="seatSearchInput">
+                                </div>
+                                <div class="filter-buttons">
+                                    <button class="filter-btn active" data-filter="all">全部</button>
+                                    <button class="filter-btn" data-filter="assigned">已分配</button>
+                                    <button class="filter-btn" data-filter="available">可用</button>
+                                    <button class="filter-btn" data-filter="vip">VIP</button>
+                                </div>
+                            </div>
+
+                            <div class="seat-list-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>座位号</th>
+                                            <th>区域</th>
+                                            <th>类型</th>
+                                            <th>状态</th>
+                                            <th>分配给</th>
+                                            <th>分配时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="seatListBody">
+                                        <!-- 座位列表数据将通过JavaScript动态生成 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧：已报名列表 -->
+            <div class="participant-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">
+                        <i class="fas fa-list-ul"></i>
+                        已报名列表
+                    </h2>
+                    <div class="panel-actions">
+                        <button class="refresh-btn" onclick="refreshParticipants()">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="panel-content">
+                    <!-- 搜索和筛选 -->
+                    <div class="participant-filters">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="搜索姓名、邮箱、手机号..." id="participantSearchInput">
+                        </div>
+                        <div class="filter-group">
+                            <select class="filter-select" id="statusFilter">
+                                <option value="all">全部状态</option>
+                                <option value="confirmed">已确认</option>
+                                <option value="pending">待审核</option>
+                                <option value="cancelled">已取消</option>
+                            </select>
+                            <select class="filter-select" id="seatStatusFilter">
+                                <option value="all">座位状态</option>
+                                <option value="assigned">已分配座位</option>
+                                <option value="unassigned">未分配座位</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 参与者列表 -->
+                    <div class="participant-list">
+                        <div id="participantContainer">
+                            <!-- 参与者卡片将通过JavaScript动态生成 -->
+                        </div>
+                    </div>
+
+                    <!-- 分页 -->
+                    <div class="pagination">
+                        <button class="page-btn" onclick="changePage(-1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span class="page-info">
+                            页面 <span id="currentPage">1</span> / <span id="totalPages">5</span>
+                        </span>
+                        <button class="page-btn" onclick="changePage(1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 座位分配弹窗 -->
+<div id="seatAssignModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>分配座位</h3>
+            <button class="close-btn" onclick="closeSeatAssignModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="assign-info">
+                <div class="seat-info">
+                    <h4>座位信息</h4>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>座位号:</label>
+                            <span id="modalSeatNumber">A1</span>
+                        </div>
+                        <div class="info-item">
+                            <label>区域:</label>
+                            <span id="modalSeatArea">VIP区</span>
+                        </div>
+                        <div class="info-item">
+                            <label>类型:</label>
+                            <span id="modalSeatType">VIP座位</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="participant-select">
+                    <h4>选择参与者</h4>
+                    <div class="select-participant">
+                        <input type="text" id="participantSearch" placeholder="搜索参与者姓名或邮箱...">
+                        <div id="participantResults" class="participant-results">
+                            <!-- 搜索结果将通过JavaScript动态生成 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="cancel-btn" onclick="closeSeatAssignModal()">取消</button>
+            <button class="assign-btn" onclick="confirmSeatAssignment()">确认分配</button>
+        </div>
+    </div>
+</div>
+
+<!-- 参与者详情弹窗 -->
+<div id="participantDetailModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>参与者详情</h3>
+            <button class="close-btn" onclick="closeParticipantDetailModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="participant-detail">
+                <div class="detail-header">
+                    <div class="participant-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="participant-basic">
+                        <h4 id="detailName">张三</h4>
+                        <div class="status-badge" id="detailStatus">已确认</div>
+                    </div>
+                </div>
+
+                <div class="detail-content">
+                    <div class="detail-section">
+                        <h5>基本信息</h5>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>邮箱:</label>
+                                <span id="detailEmail">zhang@example.com</span>
+                            </div>
+                            <div class="info-item">
+                                <label>手机:</label>
+                                <span id="detailPhone">138****8888</span>
+                            </div>
+                            <div class="info-item">
+                                <label>公司:</label>
+                                <span id="detailCompany">科技有限公司</span>
+                            </div>
+                            <div class="info-item">
+                                <label>职位:</label>
+                                <span id="detailPosition">产品经理</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h5>报名信息</h5>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>报名时间:</label>
+                                <span id="detailRegisterTime">2024-12-01 15:30</span>
+                            </div>
+                            <div class="info-item">
+                                <label>座位:</label>
+                                <span id="detailSeat">A1 (VIP区)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h5>操作记录</h5>
+                        <div class="action-history">
+                            <div class="history-item">
+                                <div class="history-time">2024-12-01 15:30</div>
+                                <div class="history-action">用户提交报名申请</div>
+                            </div>
+                            <div class="history-item">
+                                <div class="history-time">2024-12-01 16:00</div>
+                                <div class="history-action">管理员确认报名</div>
+                            </div>
+                            <div class="history-item">
+                                <div class="history-time">2024-12-02 09:15</div>
+                                <div class="history-action">分配座位 A1</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="edit-btn" onclick="editParticipant()">
+                <i class="fas fa-edit"></i>
+                编辑
+            </button>
+            <button class="delete-btn" onclick="deleteParticipant()">
+                <i class="fas fa-trash"></i>
+                删除
+            </button>
+            <button class="close-btn-primary" onclick="closeParticipantDetailModal()">关闭</button>
+        </div>
+    </div>
+</div>
+
+<!-- 全屏座位管理 -->
+<div id="fullscreenSeatModal" class="fullscreen-modal" style="display: none;">
+    <div class="fullscreen-content">
+        <div class="fullscreen-header">
+            <h2>座位分配管理</h2>
+            <button class="close-btn" onclick="closeFullscreenSeat()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="fullscreen-body">
+            <!-- 这里可以重用之前的座位排布系统 -->
+            <div class="seat-management-grid">
+                <!-- 座位管理网格将通过JavaScript动态生成 -->
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block styles %}
+/* 首页专用 - 透明导航栏 */
+nav {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    border-bottom: none !important;
+}
+
+/* 报名管理页面样式 - 继承首页背景 */
+.management-section {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100vh;
+    z-index: 1;
+    padding: 5rem 0 2rem 0;
+    background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+    transition: all 0.3s ease;
+}
+
+.management-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.05"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.05"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.08"/><circle cx="20" cy="80" r="0.5" fill="white" opacity="0.08"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    pointer-events: none;
+    z-index: -1;
+}
+
+.management-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+/* 页面头部 */
+.page-header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.page-title i {
+    color: #6366f1;
+}
+
+.page-subtitle {
+    font-size: 1.125rem;
+    color: #6b7280;
+    margin-bottom: 1rem;
+}
+
+.event-meta {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.meta-item i {
+    color: #9ca3af;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.export-btn, .settings-btn {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.export-btn:hover, .settings-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+/* 主内容区域 */
+.management-content {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 2rem;
+}
+
+/* 面板通用样式 */
+.seat-assignment-panel, .participant-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+.panel-header {
+    background: rgba(241, 245, 249, 0.7);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.panel-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.panel-title i {
+    color: #6366f1;
+}
+
+.panel-content {
+    padding: 1.5rem;
+}
+
+/* 视图切换按钮 */
+.view-toggle {
+    background: transparent;
+    border: 1px solid #d1d5db;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: #6b7280;
+    transition: all 0.3s ease;
+}
+
+.view-toggle:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+}
+
+.view-toggle:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.view-toggle.active {
+    background: #6366f1;
+    color: white;
+    border-color: #6366f1;
+}
+
+/* 座位统计栏 */
+.seat-stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* 座位控制按钮 */
+.seat-controls {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.control-btn {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.control-btn:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+/* 座位网格容器 */
+.seat-grid-container {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.stage-area {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.stage {
+    background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* 管理座位网格 */
+.management-seat-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 4px;
+    margin: 1rem auto;
+    max-width: 500px;
+}
+
+.management-seat {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.management-seat:hover {
+    transform: scale(1.1);
+    z-index: 10;
+}
+
+.management-seat.available {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.management-seat.assigned {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #93c5fd;
+}
+
+.management-seat.vip {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+.management-seat.reserved {
+    background: #f3e8ff;
+    color: #7c3aed;
+    border: 1px solid #c4b5fd;
+}
+
+.management-seat.disabled {
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+    cursor: not-allowed;
+}
+
+/* 座位图例 */
+.seat-legend {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 6px;
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.legend-color.available {
+    background: #d1fae5;
+}
+
+.legend-color.assigned {
+    background: #dbeafe;
+}
+
+.legend-color.vip {
+    background: #fef3c7;
+}
+
+.legend-color.reserved {
+    background: #f3e8ff;
+}
+
+.legend-color.disabled {
+    background: #fee2e2;
+}
+
+/* 列表视图 */
+.list-view {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+}
+
+.search-box i {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    background: white;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 1px solid #d1d5db;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn.active, .filter-btn:hover {
+    background: #6366f1;
+    color: white;
+    border-color: #6366f1;
+}
+
+/* 座位列表表格 */
+.seat-list-table {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+}
+
+.seat-list-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.seat-list-table th {
+    background: #f9fafb;
+    padding: 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 0.875rem;
+}
+
+.seat-list-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.seat-list-table tr:hover {
+    background: #f9fafb;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-badge.available {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-badge.assigned {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.status-badge.vip {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-badge.reserved {
+    background: #f3e8ff;
+    color: #7c3aed;
+}
+
+/* 参与者面板 */
+.participant-filters {
+    margin-bottom: 1.5rem;
+}
+
+.filter-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.filter-select {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    background: white;
+    color: #374151;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #6366f1;
+}
+
+/* 参与者列表 */
+.participant-list {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.participant-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.participant-card:hover {
+    border-color: #6366f1;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
+}
+
+.participant-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.participant-name {
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+}
+
+.participant-status {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.participant-status.confirmed {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.participant-status.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.participant-status.cancelled {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.participant-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.participant-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.action-btn {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.action-btn.assign {
+    background: #dbeafe;
+    color: #1e40af;
+    border-color: #93c5fd;
+}
+
+.action-btn.edit {
+    background: #fef3c7;
+    color: #92400e;
+    border-color: #fde68a;
+}
+
+.action-btn.delete {
+    background: #fee2e2;
+    color: #dc2626;
+    border-color: #fca5a5;
+}
+
+/* 分页 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.page-btn {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #6b7280;
+    transition: all 0.3s ease;
+}
+
+.page-btn:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.page-info {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.refresh-btn {
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #6b7280;
+    transition: all 0.3s ease;
+}
+
+.refresh-btn:hover {
+    background: #f1f5f9;
+    color: #374151;
+}
+
+/* 弹窗样式 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #1f2937;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: #6b7280;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    padding: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.cancel-btn, .assign-btn, .edit-btn, .delete-btn, .close-btn-primary {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn {
+    background: white;
+    color: #6b7280;
+    border: 1px solid #d1d5db;
+}
+
+.assign-btn, .close-btn-primary {
+    background: #6366f1;
+    color: white;
+    border: none;
+}
+
+.edit-btn {
+    background: #f59e0b;
+    color: white;
+    border: none;
+}
+
+.delete-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+}
+
+/* 分配座位弹窗特定样式 */
+.assign-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.info-grid {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.info-item label {
+    font-weight: 500;
+    color: #374151;
+}
+
+.info-item span {
+    color: #6b7280;
+}
+
+.participant-select input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    margin-top: 1rem;
+}
+
+.participant-results {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+}
+
+.participant-result-item {
+    padding: 0.75rem;
+    border-bottom: 1px solid #f3f4f6;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.participant-result-item:hover {
+    background: #f9fafb;
+}
+
+.participant-result-item:last-child {
+    border-bottom: none;
+}
+
+/* 参与者详情弹窗 */
+.participant-detail {
+    max-width: 100%;
+}
+
+.detail-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.participant-avatar {
+    width: 60px;
+    height: 60px;
+    background: #f3f4f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #9ca3af;
+}
+
+.participant-basic h4 {
+    margin: 0 0 0.5rem 0;
+    color: #1f2937;
+}
+
+.detail-section {
+    margin-bottom: 2rem;
+}
+
+.detail-section h5 {
+    margin: 0 0 1rem 0;
+    color: #374151;
+    font-weight: 600;
+}
+
+.action-history {
+    space-y: 0.75rem;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem;
+    background: #f9fafb;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+}
+
+.history-time {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.history-action {
+    font-size: 0.875rem;
+    color: #374151;
+}
+
+/* 全屏弹窗 */
+.fullscreen-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 2000;
+}
+
+.fullscreen-content {
+    width: 100%;
+    height: 100%;
+    background: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.fullscreen-header {
+    background: #1f2937;
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fullscreen-header h2 {
+    margin: 0;
+}
+
+.fullscreen-body {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .management-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .participant-panel {
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .management-section {
+        position: relative;
+        padding: 6rem 0 2rem 0;
+    }
+
+    .management-container {
+        padding: 0 1rem;
+    }
+
+    .header-content {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .event-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .seat-stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .management-seat-grid {
+        grid-template-columns: repeat(8, 1fr);
+    }
+
+    .assign-info {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 确保main内容区域有足够高度 */
+.main-content {
+    min-height: 100vh;
+    position: relative;
+}
+
+/* 移动端保持正常滚动 */
+@media (max-width: 768px) {
+    body {
+        overflow: auto !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .management-seat {
+        width: 32px;
+        height: 32px;
+        font-size: 0.625rem;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 1rem;
+    }
+}
+{% endblock %}
+
+{% block scripts %}
+<script>
+// 模拟数据
+let participants = [
+    {
+        id: 1,
+        name: "张三",
+        email: "zhang@example.com",
+        phone: "138****8888",
+        company: "科技有限公司",
+        position: "产品经理",
+        status: "confirmed",
+        seatId: "A1",
+        registerTime: "2024-12-01 15:30",
+        lastUpdate: "2024-12-02 09:15"
+    },
+    {
+        id: 2,
+        name: "李四",
+        email: "li@example.com",
+        phone: "139****9999",
+        company: "创新企业",
+        position: "技术总监",
+        status: "confirmed",
+        seatId: "A2",
+        registerTime: "2024-12-01 16:20",
+        lastUpdate: "2024-12-02 10:30"
+    },
+    {
+        id: 3,
+        name: "王五",
+        email: "wang@example.com",
+        phone: "137****7777",
+        company: "设计工作室",
+        position: "UI设计师",
+        status: "pending",
+        seatId: null,
+        registerTime: "2024-12-02 08:45",
+        lastUpdate: "2024-12-02 08:45"
+    },
+    // 可以添加更多参与者数据...
+];
+
+let seats = [];
+let currentPage = 1;
+let itemsPerPage = 10;
+
+// 页面加载时初始化
+document.addEventListener('DOMContentLoaded', function() {
+    initializeSeats();
+    renderSeatGrid();
+    renderParticipants();
+    initializeEventListeners();
+});
+
+// 初始化座位数据
+function initializeSeats() {
+    seats = [];
+    for (let row = 0; row < 10; row++) {
+        for (let col = 0; col < 10; col++) {
+            let seatNumber = String.fromCharCode(65 + row) + (col + 1);
+            let status = 'available';
+            let assignedTo = null;
+            let seatType = 'standard';
+
+            // 模拟一些已分配的座位
+            if (row < 2) {
+                seatType = 'vip';
+                if (col < 5) {
+                    status = 'assigned';
+                    assignedTo = participants[Math.floor(Math.random() * participants.length)]?.id || null;
+                }
+            } else if (row < 4 && col < 3) {
+                status = 'reserved';
+            } else if (Math.random() < 0.3) {
+                status = 'assigned';
+                assignedTo = participants[Math.floor(Math.random() * participants.length)]?.id || null;
+            }
+
+            seats.push({
+                id: seatNumber,
+                row: row,
+                col: col,
+                number: seatNumber,
+                area: row < 2 ? 'VIP区' : row < 6 ? 'A区' : 'B区',
+                type: seatType,
+                status: status,
+                assignedTo: assignedTo,
+                assignTime: status === 'assigned' ? new Date() : null
+            });
+        }
+    }
+}
+
+// 渲染座位网格
+function renderSeatGrid() {
+    const gridContainer = document.getElementById('managementSeatGrid');
+    gridContainer.innerHTML = '';
+
+    seats.forEach(seat => {
+        const seatElement = document.createElement('div');
+        seatElement.className = `management-seat ${seat.status}`;
+        seatElement.dataset.seatId = seat.id;
+        seatElement.textContent = seat.number;
+        seatElement.title = `座位 ${seat.number} - ${seat.area} - ${getStatusText(seat.status)}`;
+
+        seatElement.addEventListener('click', () => {
+            if (seat.status === 'available') {
+                openSeatAssignModal(seat);
+            } else if (seat.status === 'assigned') {
+                showSeatInfo(seat);
+            }
+        });
+
+        gridContainer.appendChild(seatElement);
+    });
+
+    updateSeatStats();
+}
+
+// 更新座位统计
+function updateSeatStats() {
+    const totalSeats = seats.length;
+    const assignedSeats = seats.filter(s => s.status === 'assigned').length;
+    const availableSeats = seats.filter(s => s.status === 'available').length;
+    const reservedSeats = seats.filter(s => s.status === 'reserved').length;
+
+    document.getElementById('totalSeats').textContent = totalSeats;
+    document.getElementById('assignedSeats').textContent = assignedSeats;
+    document.getElementById('availableSeats').textContent = availableSeats;
+    document.getElementById('reservedSeats').textContent = reservedSeats;
+    document.getElementById('totalRegistered').textContent = participants.length;
+}
+
+// 渲染参与者列表
+function renderParticipants() {
+    const container = document.getElementById('participantContainer');
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const pageParticipants = participants.slice(startIndex, endIndex);
+
+    container.innerHTML = pageParticipants.map(participant => `
+        <div class="participant-card" onclick="openParticipantDetail(${participant.id})">
+            <div class="participant-header">
+                <h4 class="participant-name">${participant.name}</h4>
+                <span class="participant-status ${participant.status}">${getStatusText(participant.status)}</span>
+            </div>
+            <div class="participant-info">
+                <div>邮箱: ${participant.email}</div>
+                <div>手机: ${participant.phone}</div>
+                <div>公司: ${participant.company}</div>
+                <div>座位: ${participant.seatId || '未分配'}</div>
+            </div>
+            <div class="participant-actions">
+                ${!participant.seatId ? `<button class="action-btn assign" onclick="event.stopPropagation(); assignSeatToParticipant(${participant.id})">分配座位</button>` : ''}
+                <button class="action-btn edit" onclick="event.stopPropagation(); editParticipant(${participant.id})">编辑</button>
+                <button class="action-btn delete" onclick="event.stopPropagation(); deleteParticipant(${participant.id})">删除</button>
+            </div>
+        </div>
+    `).join('');
+
+    updatePaginationInfo();
+}
+
+// 获取状态文本
+function getStatusText(status) {
+    const statusMap = {
+        'available': '可用',
+        'assigned': '已分配',
+        'reserved': '预留',
+        'disabled': '不可用',
+        'vip': 'VIP',
+        'confirmed': '已确认',
+        'pending': '待审核',
+        'cancelled': '已取消'
+    };
+    return statusMap[status] || status;
+}
+
+// 初始化事件监听器
+function initializeEventListeners() {
+    // 视图切换
+    document.querySelectorAll('.view-toggle').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.view-toggle').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            const view = this.dataset.view;
+            document.getElementById('seatView').style.display = view === 'seat' ? 'block' : 'none';
+            document.getElementById('listView').style.display = view === 'list' ? 'block' : 'none';
+
+            if (view === 'list') {
+                renderSeatListTable();
+            }
+        });
+    });
+
+    // 搜索功能
+    document.getElementById('participantSearchInput').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        // 实现搜索逻辑
+        filterParticipants(searchTerm);
+    });
+
+    // 筛选功能
+    document.getElementById('statusFilter').addEventListener('change', function() {
+        filterParticipants();
+    });
+
+    document.getElementById('seatStatusFilter').addEventListener('change', function() {
+        filterParticipants();
+    });
+}
+
+// 渲染座位列表表格
+function renderSeatListTable() {
+    const tbody = document.getElementById('seatListBody');
+    tbody.innerHTML = seats.map(seat => {
+        const assignedParticipant = participants.find(p => p.id === seat.assignedTo);
+        return `
+            <tr>
+                <td>${seat.number}</td>
+                <td>${seat.area}</td>
+                <td>${seat.type === 'vip' ? 'VIP' : '普通'}</td>
+                <td><span class="status-badge ${seat.status}">${getStatusText(seat.status)}</span></td>
+                <td>${assignedParticipant ? assignedParticipant.name : '-'}</td>
+                <td>${seat.assignTime ? formatDate(seat.assignTime) : '-'}</td>
+                <td>
+                    ${seat.status === 'available' ?
+                        `<button class="action-btn assign" onclick="openSeatAssignModal({id: '${seat.id}'})">分配</button>` :
+                        seat.status === 'assigned' ?
+                        `<button class="action-btn edit" onclick="reassignSeat('${seat.id}')">重新分配</button>` :
+                        '-'
+                    }
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+// 筛选参与者
+function filterParticipants(searchTerm = '') {
+    const statusFilter = document.getElementById('statusFilter').value;
+    const seatStatusFilter = document.getElementById('seatStatusFilter').value;
+
+    let filteredParticipants = participants.filter(participant => {
+        let matchesSearch = true;
+        let matchesStatus = true;
+        let matchesSeatStatus = true;
+
+        if (searchTerm) {
+            matchesSearch = participant.name.toLowerCase().includes(searchTerm) ||
+                          participant.email.toLowerCase().includes(searchTerm) ||
+                          participant.phone.includes(searchTerm);
+        }
+
+        if (statusFilter !== 'all') {
+            matchesStatus = participant.status === statusFilter;
+        }
+
+        if (seatStatusFilter !== 'all') {
+            matchesSeatStatus = seatStatusFilter === 'assigned' ?
+                               participant.seatId !== null :
+                               participant.seatId === null;
+        }
+
+        return matchesSearch && matchesStatus && matchesSeatStatus;
+    });
+
+    // 更新显示（这里简化处理，实际应该重新渲染）
+    currentPage = 1;
+    renderParticipants();
+}
+
+// 打开座位分配弹窗
+function openSeatAssignModal(seat) {
+    const modal = document.getElementById('seatAssignModal');
+    document.getElementById('modalSeatNumber').textContent = seat.id;
+    document.getElementById('modalSeatArea').textContent = seats.find(s => s.id === seat.id)?.area || '';
+    document.getElementById('modalSeatType').textContent = seats.find(s => s.id === seat.id)?.type === 'vip' ? 'VIP座位' : '普通座位';
+
+    modal.style.display = 'flex';
+
+    // 搜索参与者功能
+    const participantSearch = document.getElementById('participantSearch');
+    const participantResults = document.getElementById('participantResults');
+
+    participantSearch.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const unassignedParticipants = participants.filter(p => !p.seatId &&
+            (p.name.toLowerCase().includes(searchTerm) || p.email.toLowerCase().includes(searchTerm)));
+
+        participantResults.innerHTML = unassignedParticipants.map(p => `
+            <div class="participant-result-item" onclick="selectParticipant(${p.id}, '${seat.id}')">
+                <div><strong>${p.name}</strong></div>
+                <div>${p.email} - ${p.company}</div>
+            </div>
+        `).join('');
+    });
+}
+
+// 选择参与者
+function selectParticipant(participantId, seatId) {
+    const participant = participants.find(p => p.id === participantId);
+    document.getElementById('participantSearch').value = participant.name;
+    document.getElementById('participantResults').innerHTML = '';
+
+    // 存储选中的参与者ID
+    document.getElementById('participantSearch').dataset.participantId = participantId;
+    document.getElementById('participantSearch').dataset.seatId = seatId;
+}
+
+// 确认座位分配
+function confirmSeatAssignment() {
+    const participantId = parseInt(document.getElementById('participantSearch').dataset.participantId);
+    const seatId = document.getElementById('participantSearch').dataset.seatId;
+
+    if (participantId && seatId) {
+        // 更新座位状态
+        const seat = seats.find(s => s.id === seatId);
+        if (seat) {
+            seat.status = 'assigned';
+            seat.assignedTo = participantId;
+            seat.assignTime = new Date();
+        }
+
+        // 更新参与者座位信息
+        const participant = participants.find(p => p.id === participantId);
+        if (participant) {
+            participant.seatId = seatId;
+        }
+
+        // 刷新界面
+        renderSeatGrid();
+        renderParticipants();
+        closeSeatAssignModal();
+
+        alert('座位分配成功！');
+    } else {
+        alert('请选择参与者');
+    }
+}
+
+// 关闭座位分配弹窗
+function closeSeatAssignModal() {
+    document.getElementById('seatAssignModal').style.display = 'none';
+    document.getElementById('participantSearch').value = '';
+    document.getElementById('participantResults').innerHTML = '';
+}
+
+// 打开参与者详情
+function openParticipantDetail(participantId) {
+    const participant = participants.find(p => p.id === participantId);
+    if (!participant) return;
+
+    document.getElementById('detailName').textContent = participant.name;
+    document.getElementById('detailStatus').textContent = getStatusText(participant.status);
+    document.getElementById('detailStatus').className = `status-badge ${participant.status}`;
+    document.getElementById('detailEmail').textContent = participant.email;
+    document.getElementById('detailPhone').textContent = participant.phone;
+    document.getElementById('detailCompany').textContent = participant.company;
+    document.getElementById('detailPosition').textContent = participant.position;
+    document.getElementById('detailRegisterTime').textContent = participant.registerTime;
+    document.getElementById('detailSeat').textContent = participant.seatId ?
+        `${participant.seatId} (${seats.find(s => s.id === participant.seatId)?.area || ''})` : '未分配';
+
+    document.getElementById('participantDetailModal').style.display = 'flex';
+}
+
+// 关闭参与者详情弹窗
+function closeParticipantDetailModal() {
+    document.getElementById('participantDetailModal').style.display = 'none';
+}
+
+// 自动分配座位
+function autoAssignSeats() {
+    const unassignedParticipants = participants.filter(p => !p.seatId && p.status === 'confirmed');
+    const availableSeats = seats.filter(s => s.status === 'available');
+
+    if (unassignedParticipants.length === 0) {
+        alert('没有需要分配座位的参与者');
+        return;
+    }
+
+    if (availableSeats.length < unassignedParticipants.length) {
+        alert(`可用座位不足！需要 ${unassignedParticipants.length} 个座位，但只有 ${availableSeats.length} 个可用`);
+        return;
+    }
+
+    // 简单的自动分配逻辑：按顺序分配
+    for (let i = 0; i < unassignedParticipants.length && i < availableSeats.length; i++) {
+        const participant = unassignedParticipants[i];
+        const seat = availableSeats[i];
+
+        seat.status = 'assigned';
+        seat.assignedTo = participant.id;
+        seat.assignTime = new Date();
+        participant.seatId = seat.id;
+    }
+
+    renderSeatGrid();
+    renderParticipants();
+    alert(`成功自动分配 ${Math.min(unassignedParticipants.length, availableSeats.length)} 个座位！`);
+}
+
+// 清空所有分配
+function clearAssignments() {
+    if (confirm('确定要清空所有座位分配吗？此操作不可撤销。')) {
+        seats.forEach(seat => {
+            if (seat.status === 'assigned') {
+                seat.status = 'available';
+                seat.assignedTo = null;
+                seat.assignTime = null;
+            }
+        });
+
+        participants.forEach(participant => {
+            participant.seatId = null;
+        });
+
+        renderSeatGrid();
+        renderParticipants();
+        alert('所有座位分配已清空！');
+    }
+}
+
+// 显示座位信息
+function showSeatInfo(seat) {
+    const participant = participants.find(p => p.id === seat.assignedTo);
+    alert(`座位信息：
+座位号：${seat.number}
+区域：${seat.area}
+分配给：${participant ? participant.name : '未知'}
+分配时间：${seat.assignTime ? formatDate(seat.assignTime) : '未知'}`);
+}
+
+// 显示全屏座位管理
+function showSeatLayout() {
+    document.getElementById('fullscreenSeatModal').style.display = 'block';
+    // 这里可以加载更详细的座位管理界面
+}
+
+// 关闭全屏座位管理
+function closeFullscreenSeat() {
+    document.getElementById('fullscreenSeatModal').style.display = 'none';
+}
+
+// 分配座位给参与者
+function assignSeatToParticipant(participantId) {
+    const availableSeats = seats.filter(s => s.status === 'available');
+    if (availableSeats.length === 0) {
+        alert('没有可用座位！');
+        return;
+    }
+
+    // 简单分配第一个可用座位
+    const seat = availableSeats[0];
+    seat.status = 'assigned';
+    seat.assignedTo = participantId;
+    seat.assignTime = new Date();
+
+    const participant = participants.find(p => p.id === participantId);
+    participant.seatId = seat.id;
+
+    renderSeatGrid();
+    renderParticipants();
+    alert(`已为 ${participant.name} 分配座位 ${seat.number}`);
+}
+
+// 编辑参与者
+function editParticipant(participantId) {
+    alert('编辑功能开发中...');
+}
+
+// 删除参与者
+function deleteParticipant(participantId) {
+    if (confirm('确定要删除此参与者吗？')) {
+        const participantIndex = participants.findIndex(p => p.id === participantId);
+        if (participantIndex > -1) {
+            const participant = participants[participantIndex];
+
+            // 如果有分配座位，需要释放座位
+            if (participant.seatId) {
+                const seat = seats.find(s => s.id === participant.seatId);
+                if (seat) {
+                    seat.status = 'available';
+                    seat.assignedTo = null;
+                    seat.assignTime = null;
+                }
+            }
+
+            participants.splice(participantIndex, 1);
+            renderSeatGrid();
+            renderParticipants();
+            alert('参与者已删除！');
+        }
+    }
+}
+
+// 刷新参与者列表
+function refreshParticipants() {
+    // 模拟刷新
+    renderParticipants();
+    alert('列表已刷新！');
+}
+
+// 更新分页信息
+function updatePaginationInfo() {
+    const totalPages = Math.ceil(participants.length / itemsPerPage);
+    document.getElementById('currentPage').textContent = currentPage;
+    document.getElementById('totalPages').textContent = totalPages;
+}
+
+// 改变页面
+function changePage(direction) {
+    const totalPages = Math.ceil(participants.length / itemsPerPage);
+    const newPage = currentPage + direction;
+
+    if (newPage >= 1 && newPage <= totalPages) {
+        currentPage = newPage;
+        renderParticipants();
+    }
+}
+
+// 格式化日期
+function formatDate(date) {
+    if (!(date instanceof Date)) {
+        date = new Date(date);
+    }
+    return date.toLocaleString('zh-CN');
+}
+
+// 重新分配座位
+function reassignSeat(seatId) {
+    const seat = seats.find(s => s.id === seatId);
+    if (seat && seat.assignedTo) {
+        const participant = participants.find(p => p.id === seat.assignedTo);
+        if (confirm(`确定要重新分配座位 ${seatId} 吗？当前分配给：${participant?.name || '未知'}`)) {
+            // 释放当前分配
+            seat.status = 'available';
+            seat.assignedTo = null;
+            seat.assignTime = null;
+
+            if (participant) {
+                participant.seatId = null;
+            }
+
+            renderSeatGrid();
+            renderParticipants();
+
+            // 打开分配弹窗
+            openSeatAssignModal(seat);
+        }
+    }
+}
+</script>
+{% endblock %}

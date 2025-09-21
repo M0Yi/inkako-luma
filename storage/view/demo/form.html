@@ -1,0 +1,164 @@
+{% extends "layout/page.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="card-glass">
+        <div class="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-6 text-center rounded-t-2xl">
+            <h3 class="text-2xl font-bold mb-2">
+                <i class="fas fa-envelope mr-2"></i>{{ title }}
+            </h3>
+            <p class="opacity-90">我们很乐意听到您的声音</p>
+        </div>
+        <div class="p-8">
+            <form method="POST" action="/demo/form" class="space-y-6">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-user text-luma-500 mr-2"></i>姓名
+                        </label>
+                        <input type="text" class="form-input text-lg" id="name" name="name"
+                               placeholder="请输入您的姓名" required>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-envelope text-luma-500 mr-2"></i>邮箱
+                        </label>
+                        <input type="email" class="form-input text-lg" id="email" name="email"
+                               placeholder="请输入您的邮箱" required>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="subject" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <i class="fas fa-tag text-luma-500 mr-2"></i>主题
+                    </label>
+                    <select class="form-select text-lg" id="subject" name="subject">
+                        <option value="">请选择主题</option>
+                        <option value="技术支持">技术支持</option>
+                        <option value="业务咨询">业务咨询</option>
+                        <option value="Bug反馈">Bug反馈</option>
+                        <option value="功能建议">功能建议</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="message" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <i class="fas fa-comment text-luma-500 mr-2"></i>消息内容
+                    </label>
+                    <textarea class="form-textarea text-lg" id="message" name="message" rows="6"
+                              placeholder="请详细描述您的问题或建议..." required></textarea>
+                    <div class="text-sm text-gray-500 mt-2">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        我们通常在24小时内回复您的消息
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="/demo" class="btn-secondary flex-1 text-lg py-4 flex items-center justify-center bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-full font-semibold transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>返回
+                    </a>
+                    <button type="submit" class="btn-primary flex-1 text-lg py-4 flex items-center justify-center">
+                        <i class="fas fa-paper-plane mr-2"></i>发送消息
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 联系信息卡片 -->
+    <div class="card-glass mt-8">
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-6 rounded-t-2xl">
+            <h5 class="text-xl font-bold flex items-center">
+                <i class="fas fa-address-card mr-2"></i>其他联系方式
+            </h5>
+        </div>
+        <div class="p-8">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="p-6">
+                        <i class="fas fa-phone text-4xl text-luma-500 mb-4"></i>
+                        <h6 class="text-lg font-semibold text-gray-900 mb-2">电话</h6>
+                        <p class="text-gray-600">+86 400-123-4567</p>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="p-6">
+                        <i class="fas fa-envelope text-4xl text-green-500 mb-4"></i>
+                        <h6 class="text-lg font-semibold text-gray-900 mb-2">邮箱</h6>
+                        <p class="text-gray-600">support@hyperf.io</p>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="p-6">
+                        <i class="fas fa-map-marker-alt text-4xl text-red-500 mb-4"></i>
+                        <h6 class="text-lg font-semibold text-gray-900 mb-2">地址</h6>
+                        <p class="text-gray-600">北京市朝阳区</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Twig 表单处理演示 -->
+    <div class="card-glass mt-8">
+        <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-8 py-6 rounded-t-2xl">
+            <h5 class="text-xl font-bold flex items-center">
+                <i class="fas fa-code mr-2"></i>Twig 表单功能演示
+            </h5>
+        </div>
+        <div class="p-8">
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h6 class="text-luma-500 text-lg font-semibold mb-4">表单验证提示</h6>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✅</span> HTML5 原生验证</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✅</span> Tailwind CSS 样式集成</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✅</span> 响应式设计</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✅</span> 用户友好提示</li>
+                    </ul>
+                </div>
+                <div>
+                    <h6 class="text-green-500 text-lg font-semibold mb-4">Twig 模板特性</h6>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-center"><span class="mr-2">🎯</span> 模板继承</li>
+                        <li class="flex items-center"><span class="mr-2">🔧</span> 条件渲染</li>
+                        <li class="flex items-center"><span class="mr-2">🔄</span> 循环处理</li>
+                        <li class="flex items-center"><span class="mr-2">🛡️</span> 自动转义</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 表单提交前的简单验证
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const message = document.getElementById('message').value.trim();
+
+        if (!name || !email || !message) {
+            e.preventDefault();
+            alert('请填写所有必填字段！');
+            return false;
+        }
+
+        // 简单的邮箱格式验证
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            e.preventDefault();
+            alert('请输入有效的邮箱地址！');
+            return false;
+        }
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,216 @@
+{% extends "layout/page.html" %}
+
+{% block title %}{{ title }} - Hyperf Demo{% endblock %}
+
+{% block content %}
+<!-- 欢迎卡片 -->
+<div class="mb-8">
+    <div class="card-glass p-8 text-center">
+        <div class="grid md:grid-cols-3 gap-6 items-center">
+            <div class="md:col-span-2 text-left">
+                <h1 class="text-3xl font-bold text-white mb-4 flex items-center">
+                    <i class="fas fa-code text-blue-200 mr-3"></i>
+                    {{ title }}
+                </h1>
+                <p class="text-xl text-white/90 mb-3">欢迎 <strong class="text-blue-200">{{ name }}</strong>！</p>
+                <p class="text-white/70 flex items-center">
+                    <i class="fas fa-calendar-alt mr-2"></i>
+                    登录时间: {{ loginTime }}
+                </p>
+            </div>
+            <div class="flex justify-center md:justify-end">
+                {% if isVip %}
+                    <span class="badge-warning inline-flex items-center px-4 py-2 text-lg">
+                        <i class="fas fa-crown mr-2"></i>VIP 用户
+                    </span>
+                {% else %}
+                    <span class="badge inline-flex items-center px-4 py-2 text-lg bg-gray-100 text-gray-700">
+                        <i class="fas fa-user mr-2"></i>普通用户
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="grid md:grid-cols-3 gap-8 mb-8">
+    <!-- 用户信息卡片 -->
+    <div class="card-hover h-full">
+        <div class="bg-luma-500 text-white px-6 py-4 rounded-t-2xl">
+            <h5 class="text-lg font-semibold flex items-center">
+                <i class="fas fa-user-circle mr-2"></i>个人信息
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="space-y-4">
+                <div>
+                    <strong class="text-gray-700">姓名:</strong>
+                    <span class="text-gray-900">{{ name }}</span>
+                </div>
+                <div>
+                    <strong class="text-gray-700">年龄:</strong>
+                    <span class="text-gray-900">{{ age }} 岁</span>
+                </div>
+                <div>
+                    <strong class="text-gray-700">状态:</strong>
+                    {% if age >= 18 %}
+                        <span class="badge-success">成年</span>
+                    {% else %}
+                        <span class="badge-warning">未成年</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 技能列表 -->
+    <div class="card-hover h-full">
+        <div class="bg-green-500 text-white px-6 py-4 rounded-t-2xl">
+            <h5 class="text-lg font-semibold flex items-center">
+                <i class="fas fa-code-branch mr-2"></i>技能清单
+            </h5>
+        </div>
+        <div class="p-6">
+            {% if skills is not empty %}
+                <div class="flex flex-wrap gap-2 mb-4">
+                    {% for skill in skills %}
+                        <span class="badge-primary">
+                            {{ skill }}
+                        </span>
+                    {% endfor %}
+                </div>
+                <div class="text-gray-500 text-sm">
+                    <i class="fas fa-chart-bar mr-1"></i>
+                    掌握 {{ skills|length }} 项技能
+                </div>
+            {% else %}
+                <p class="text-gray-500">暂无技能信息</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Twig 功能演示 -->
+    <div class="card-hover h-full">
+        <div class="bg-blue-500 text-white px-6 py-4 rounded-t-2xl">
+            <h5 class="text-lg font-semibold flex items-center">
+                <i class="fas fa-magic mr-2"></i>Twig 功能演示
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="space-y-4">
+                <div>
+                    <strong class="text-gray-700">字符串处理:</strong>
+                    <div class="mt-2 space-y-1 text-sm text-gray-600">
+                        <div>大写: {{ name|upper }}</div>
+                        <div>小写: {{ name|lower }}</div>
+                        <div>首字母大写: {{ name|title }}</div>
+                    </div>
+                </div>
+                <div>
+                    <strong class="text-gray-700">数字格式化:</strong>
+                    <div class="mt-2 text-sm text-gray-600">年龄 × 12 = {{ age * 12 }}</div>
+                </div>
+                <div>
+                    <strong class="text-gray-700">条件判断:</strong>
+                    <div class="mt-2 text-sm text-gray-600">{{ age > 20 ? '经验丰富' : '年轻有为' }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 项目列表 -->
+<div class="card-hover">
+    <div class="bg-gray-800 text-white px-6 py-4 rounded-t-2xl">
+        <h5 class="text-lg font-semibold flex items-center">
+            <i class="fas fa-project-diagram mr-2"></i>项目列表
+        </h5>
+    </div>
+    <div class="p-6">
+        {% if projects is not empty %}
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-50 border-b">
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">#</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">项目名称</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">状态</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">进度</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">评分</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        {% for project in projects %}
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-4 py-4 text-sm text-gray-600">{{ loop.index }}</td>
+                                <td class="px-4 py-4">
+                                    <span class="font-semibold text-gray-900">{{ project.name }}</span>
+                                </td>
+                                <td class="px-4 py-4">
+                                    {% if project.status == '已完成' %}
+                                        <span class="badge-success">{{ project.status }}</span>
+                                    {% elseif project.status == '进行中' %}
+                                        <span class="badge-warning">{{ project.status }}</span>
+                                    {% else %}
+                                        <span class="badge bg-gray-100 text-gray-700">{{ project.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-4 py-4">
+                                    <div class="w-full bg-gray-200 rounded-full h-5 relative">
+                                        <div class="h-5 rounded-full flex items-center justify-center text-xs font-medium text-white
+                                            {% if project.score >= 80 %}bg-green-500
+                                            {% elseif project.score >= 60 %}bg-yellow-500
+                                            {% else %}bg-red-500{% endif %}"
+                                            style="width: {{ project.score }}%">
+                                            {{ project.score }}%
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4">
+                                    <div class="flex space-x-1">
+                                        {% for i in 1..5 %}
+                                            {% if i <= (project.score / 20) %}
+                                                <i class="fas fa-star text-yellow-400"></i>
+                                            {% else %}
+                                                <i class="far fa-star text-gray-300"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 项目统计 -->
+            <div class="grid md:grid-cols-3 gap-6 mt-8 pt-6 border-t border-gray-200">
+                <div class="text-center">
+                    <h3 class="text-3xl font-bold text-luma-500">{{ projects|length }}</h3>
+                    <p class="text-gray-500">总项目数</p>
+                </div>
+                <div class="text-center">
+                    {% set completed = 0 %}
+                    {% for project in projects %}
+                        {% if project.status == '已完成' %}
+                            {% set completed = completed + 1 %}
+                        {% endif %}
+                    {% endfor %}
+                    <h3 class="text-3xl font-bold text-green-500">{{ completed }}</h3>
+                    <p class="text-gray-500">已完成</p>
+                </div>
+                <div class="text-center">
+                    {% set totalScore = 0 %}
+                    {% for project in projects %}
+                        {% set totalScore = totalScore + project.score %}
+                    {% endfor %}
+                    <h3 class="text-3xl font-bold text-yellow-500">{{ (totalScore / projects|length)|round }}%</h3>
+                    <p class="text-gray-500">平均进度</p>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-gray-500 text-center py-8">暂无项目信息</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

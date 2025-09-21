@@ -1,0 +1,17 @@
+version: '3'
+services:
+  hyperf-skeleton:
+    container_name: luma-hyperf-skeleton
+    image: hyperf-skeleton
+    build:
+      context: .
+    volumes:
+      - ./:/opt/www
+    ports:
+      - 7501:9501
+    environment:
+      - APP_ENV=dev
+      - SCAN_CACHEABLE=false
+networks:
+  my_network:
+    external: true
